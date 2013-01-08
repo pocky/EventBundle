@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="blackroom_event.form.type.event">Blackroom\Bundle\EventBundle\Form\Type\EventType</parameter>
+        <parameter key="blackroom_event.model.event.class">Blackroom\Bundle\ERPBundle\Document\Event</parameter>
+    </parameters>
+
+    <services>
+        <service id="blackroom_event.form.event" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
+            <argument>blackroom_event_event</argument>
+            <argument type="service" id="blackroom_event.form.type.event" />
+            <argument>null</argument>
+        </service>
+
+        <service id="blackroom_event.form.type.event" class="%blackroom_event.form.type.event%">
+            <argument>%blackroom_event.model.event.class%</argument>
+            <tag name="form.type" />
+        </service>
+
+        <service id="blackroom_event.form.handler.event" class="Blackroom\Bundle\EventBundle\Form\Handler\EventFormHandler" scope="request" public="true">
+            <argument type="service" id="blackroom_event.form.event" />
+            <argument type="service" id="request" />
+            <argument type="service" id="session" />
+            <argument type="service" id="doctrine_mongodb" />
+        </service>
+    </services>
+</container>

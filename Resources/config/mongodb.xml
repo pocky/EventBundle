@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="blackroom_event.manager.event">Blackroom\Bundle\EventBundle\Document\Event\EventManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="blackroom_event.document.manager" alias="doctrine.odm.mongodb.document_manager" />
+
+        <service id="blackroom_event.manager.event" class="%blackroom_event.manager.event%">
+            <argument type="service" id="blackroom_event.document.manager" />
+            <argument>%blackroom_event.model.event.class%</argument>
+        </service>
+
+    </services>
+</container>
