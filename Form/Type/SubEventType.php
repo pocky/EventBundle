@@ -39,12 +39,12 @@ class SubEventType extends EventType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                'data_class' => $this->class,
-            ));
+            'data_class' => $this->class,
+        ));
     }
 
     public function getName()
     {
-        return 'blackroom_event_event';
+        return 'blackroom_event_subEvent';
     }
 }

@@ -18,7 +18,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use ActivCompany\Bundle\ERPBundle\Document\Event;
 
 /**
  * Controller managing the event profile
@@ -37,16 +36,18 @@ class AdminEventController extends Controller
      */
     public function indexAction()
     {
-        $repository = $this->get('doctrine_mongodb')->getManager()->getRepository('BlackroomEventBundle:Event\Event');
+        $manager    = $this->getDocumentManager();
+        $repository = $manager->getDocumentRepository();
         $rawDocuments  = $repository->findAll();
+
         $csrf       = $this->container->get('form.csrf_provider');
 
         $documents = array();
 
         foreach ($rawDocuments as $document) {
             $documents[] = array(
-                'id'        => $document->getId(),
-                'Name'      => $document->getName()
+                'id'                        => $document->getId(),
+                'event.admin.list.name'     => $document->getName()
             );
         }
 
@@ -67,10 +68,10 @@ class AdminEventController extends Controller
      */
     public function newAction()
     {
-        $document           = new Event();
-        $documentManager    = $this->get('doctrine_mongodb')->getManager();
+        $documentManager    = $this->getDocumentManager();
+        $document           = $documentManager->createEvent();
 
-        $formHandler    = $this->get('blackroom_event.form.handler.event');
+        $formHandler    = $this->get('blackroom_event.event.form.handler');
         $process        = $formHandler->process($document);
 
         if ($process) {
@@ -102,8 +103,8 @@ class AdminEventController extends Controller
      */
     public function editAction($id)
     {
-        $documentManager = $this->get('doctrine_mongodb')->getManager();
-        $repository = $documentManager->getRepository('BlackroomEventBundle:Event\Event');
+        $documentManager = $this->getDocumentManager();
+        $repository = $documentManager->getDocumentRepository();
 
         $document = $repository->findOneById($id);
 
@@ -113,7 +114,7 @@ class AdminEventController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        $formHandler    = $this->get('blackroom_event.form.handler.event');
+        $formHandler    = $this->get('blackroom_event.event.form.handler');
         $process        = $formHandler->process($document);
 
         if ($process) {
@@ -154,8 +155,8 @@ class AdminEventController extends Controller
 
         if ($form->isValid() || true === $token) {
 
-            $dm         = $this->get('doctrine_mongodb')->getManager();
-            $repository = $dm->getRepository('BlackroomEventBundle:Event\Event');
+            $dm         = $this->getDocumentManager();
+            $repository = $dm->getDocumentRepository();
             $document   = $repository->findOneById($id);
 
             if (!$document) {
@@ -226,5 +227,10 @@ class AdminEventController extends Controller
             ->getForm();
 
         return $form;
+    }
+
+    protected function getDocumentManager()
+    {
+        return $this->get('blackroom_event.manager.event');
     }
 }

@@ -3,3 +3,27 @@ event:
   admin:
     event:
       title: Evènements
+      sidebar:
+        list:
+          span: Gérer vos évènements
+          a: Accéder à la liste de vos évènements
+
+    shortcut:
+      new: Créer un évènement
+
+    new:
+      title: Créer un évènement
+
+    form:
+      name: Nom de l'évènement
+      description: Description
+      startDate: Date de début
+      endDate: Date de fin
+      duration: Durée
+      url: Site internet
+      location: Lieu
+      subEvent: Sous-évènements
+      superEvent:
+        title: Evénement principal
+        empty: Choisir un évènement
+      attendees: Personnes attendues

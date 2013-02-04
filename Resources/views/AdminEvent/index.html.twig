@@ -11,8 +11,8 @@
 
     <div id="content">
 
-        {% include 'BlackroomAdminBundle:Admin:contentTop.html.twig' with {'title': "Manage your events"} %}
-        {% include 'BlackroomEventBundle:AdminEvent:breadLine.html.twig' with {'route': 'admin_event_new', 'text': "New event"} %}
+        {% include 'BlackroomAdminBundle:Admin:contentTop.html.twig' with {'title': "event.admin.event.sidebar.list.span"} %}
+        {% include 'BlackroomEventBundle:AdminEvent:breadLine.html.twig' with {'route': 'admin_event_new', 'text': "event.admin.shortcut.new"} %}
 
         <!-- Main content -->
         <div class="wrapper">
@@ -24,7 +24,7 @@
                     <div class="widget check">
                         <div class="whead">
                             <span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span>
-                            <h6>{% trans %}Events{% endtrans %}</h6>
+                            <h6>{% trans %}event.admin.event.title{% endtrans %}</h6>
                             <div class="clear"></div>
                         </div>
 

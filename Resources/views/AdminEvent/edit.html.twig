@@ -9,23 +9,20 @@
     {% set admin_delete = 'admin_event_delete' %}
 
     <div id="content">
-        {% include 'BlackroomAdminBundle:Admin:contentTop.html.twig' with {'title': "Edit an event"} %}
-        {% include 'BlackroomEventBundle:AdminEvent:breadLine.html.twig' with {'route': 'admin_event_new', 'text': "New event"} %}
+        {% include 'BlackroomAdminBundle:Admin:contentTop.html.twig' with {'title': "event.admin.edit.title"} %}
+        {% include 'BlackroomEventBundle:AdminEvent:breadLine.html.twig' with {'route': 'admin_event_new', 'text': "event.admin.new.title"} %}
 
-        <!-- Main content -->
         <div class="wrapper">
 
             {% include 'BlackroomAdminBundle:Form:errors.html.twig' with {'form': form} %}
             {% include 'BlackroomAdminBundle:Admin:flashes.html.twig' with {'flashes': app.session.getFlashes()} %}
 
             <div class="fluid">
-
                 <form id="validate" class="main grid9" action="{{ path('admin_event_edit', { 'id': document.id }) }}" method="post" {{ form_enctype(form) }}>
-                    {% include 'BlackroomAdminBundle:AdminForm:fieldset.html.twig' with {'form': form, 'title': "Edit an event"} %}
+                    {% include 'BlackroomAdminBundle:AdminForm:fieldset.html.twig' with {'form': form, 'title': "event.admin.edit.title"} %}
                 </form>
 
                 {% include 'BlackroomAdminBundle:AdminForm:actions.html.twig' with {'document': document} %}
-
             </div>
 
         </div>

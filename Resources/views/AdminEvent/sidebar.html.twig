@@ -3,7 +3,7 @@
     <div class="secWrapper">
         <div class="secTop">
             <div class="balance">
-                <div class="balInfo">{% trans %}Events{% endtrans %}</div>
+                <div class="balInfo">{% trans %}event.admin.event.title{% endtrans %}</div>
             </div>
         </div>
 
@@ -22,8 +22,8 @@
             <div id="general">
                 <ul class="subNav">
                     <li>
-                        <a href="{{ path('admin_events') }}" title="{% trans %}Link to Events{% endtrans %}" {% if currentPath == path('admin_events') %}class="this"{% endif %}>
-                            <span class="icos-list2"></span>{% trans %}Events{% endtrans %}
+                        <a href="{{ path('admin_events') }}" title="{% trans %}event.admin.event.sidebar.list.span{% endtrans %}" {% if currentPath == path('admin_events') %}class="this"{% endif %}>
+                            <span class="icos-list2"></span>{% trans %}event.admin.event.sidebar.list.span{% endtrans %}
                         </a>
                     </li>
                 </ul>

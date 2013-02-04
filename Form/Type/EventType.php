@@ -31,33 +31,37 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name', 'text', array(
-                'label'         => 'Event name',
+                'label'         => 'event.admin.form.name',
             ))
             ->add('description', 'textarea', array(
+                'label'         => 'event.admin.form.description',
                 'required'      => false
             ))
             ->add('startDate', 'date', array(
-                'label'         => 'Start date',
-                'empty_value'   => array('year' => 'Year', 'month' => 'Month', 'day' => 'Day')
+                'label'         => 'event.admin.form.startDate',
+                'empty_value'   => array('year' => 'admin.form.date.year', 'month' => 'admin.form.date.month', 'day' => 'admin.form.date.day')
             ))
             ->add('endDate', 'date', array(
                 'required'      => false,
-                'label'         => 'End date',
-                'empty_value'   => array('year' => 'Year', 'month' => 'Month', 'day' => 'Day')
+                'label'         => 'event.admin.form.endDate',
+                'empty_value'   =>  array('year' => 'admin.form.date.year', 'month' => 'admin.form.date.month', 'day' => 'admin.form.date.day')
             ))
             ->add('duration', 'text', array(
+                'label'         => 'event.admin.form.duration',
                 'required'      => false
             ))
             ->add('url', 'url', array(
+                'label'         => 'event.admin.form.url',
                 'required'      => false
             ))
             ->add('location', new PostalAddressType(), array(
+                'label'                 => 'event.admin.form.location',
                 'cascade_validation'    => true,
                 'required'              => false
             ))
             ->add('subEvents', 'collection', array(
-                'type'          => new SubEventType('Blackroom\Bundle\EventBundle\Document\Event\Event'),
-                'label'         => 'Sub Events',
+                'type'          => new SubEventType('ActivCompany\Bundle\ERPBundle\Document\Event'),
+                'label'         => 'event.admin.form.subEvent',
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'required'      => false,
@@ -69,16 +73,16 @@ class EventType extends AbstractType
             ->add('superEvent', 'document', array(
                 'class'         => $this->class,
                 'property'      => 'name',
-                'label'         => 'Super Event',
+                'label'         => 'event.admin.form.superEvent.title',
                 'required'      => false,
-                'empty_value'   => 'Choose an Event'
+                'empty_value'   => 'event.admin.form.superEvent.empty'
             ))
             ->add('attendees', 'document', array(
-                'class'         => 'Blackroom\Bundle\ERPBundle\Document\Person',
+                'class'         => 'ActivCompany\Bundle\ERPBundle\Document\Person',
                 'property'      => 'name',
                 'multiple'      => true,
                 'by_reference'  => false,
-                'label'         => 'Attendees',
+                'label'         => 'event.admin.form.attendees',
                 'required'      => false
             ))
         ;
