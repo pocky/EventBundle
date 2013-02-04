@@ -66,27 +66,4 @@ abstract class Event extends AbstractEvent
      * @ODM\ReferenceOne(targetDocument="Event", cascade={"all"})
      */
     protected $superEvent;
-
-    public function setAttendee($attendee)
-    {
-        $this->attendees[] = $attendee;
-    }
-
-    public function addAttendee(PersonInterface $attendee)
-    {
-        if (!$attendee->getEvents()->contains($this)) {
-            $attendee->setEvent($this);
-        }
-
-        $this->setAttendee($attendee);
-    }
-
-    public function removeAttendee(PersonInterface $attendee)
-    {
-        if ($attendee->getEvents()->contains($this)) {
-            $attendee->getEvents()->removeElement($this);
-        }
-
-        $this->getAttendees()->removeElement($attendee);
-    }
 }

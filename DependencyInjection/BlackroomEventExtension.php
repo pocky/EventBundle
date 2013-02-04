@@ -37,9 +37,55 @@ class BlackroomEventExtension extends Extension
             throw new \InvalidArgumentException(sprintf('The db_driver "%s" is not supported by engine', $config['db_driver']));
         }
 
+        $this->remapParametersNamespaces($config, $container, array(
+            ''  => array(
+                'event_class'    => 'blackroom_event.model.event.class',
+            )
+        ));
 
-        $loader->load('services.xml');
+        if (!empty($config['event'])) {
+            $this->loadEvent($config['event'], $container, $loader);
+        }
+    }
+
+    private function loadEvent(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
         $loader->load('event.xml');
+
+        $this->remapParametersNamespaces($config, $container, array(
+            'form' => 'blackroom_event.event.form.%s',
+        ));
+    }
+
+    protected function remapParameters(array $config, ContainerBuilder $container, array $map)
+    {
+        foreach ($map as $name => $paramName) {
+            if (array_key_exists($name, $config)) {
+                $container->setParameter($paramName, $config[$name]);
+            }
+        }
+    }
+
+    protected function remapParametersNamespaces(array $config, ContainerBuilder $container, array $namespaces)
+    {
+        foreach ($namespaces as $ns => $map) {
+
+            if ($ns) {
+                if (!array_key_exists($ns, $config)) {
+                    continue;
+                }
+                $namespaceConfig = $config[$ns];
+            } else {
+                $namespaceConfig = $config;
+            }
+            if (is_array($map)) {
+                $this->remapParameters($namespaceConfig, $container, $map);
+            } else {
+                foreach ($namespaceConfig as $name => $value) {
+                    $container->setParameter(sprintf($map, $name), $value);
+                }
+            }
+        }
     }
 
     public function getAlias()
