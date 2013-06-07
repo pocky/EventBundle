@@ -8,30 +8,27 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\Form\Handler;
+namespace Black\Bundle\EventBundle\Form\Handler;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Blackroom\Bundle\EventBundle\Model\Event\Event;
-use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
+use Black\Bundle\EventBundle\Model\EventInterface;
 
 class EventFormHandler
 {
     protected $request;
     protected $form;
-    protected $factory;
     protected $session;
 
-    public function __construct(FormInterface $form, Request $request, SessionInterface $session, ManagerRegistry $manager)
+    public function __construct(FormInterface $form, Request $request, SessionInterface $session)
     {
         $this->form     = $form;
         $this->request  = $request;
         $this->session  = $session;
-        $this->manager  = $manager->getManager();
     }
 
-    public function process(Event $event)
+    public function process(EventInterface $event)
     {
         $this->form->setData($event);
 
@@ -57,6 +54,6 @@ class EventFormHandler
 
     protected function setFlash($name, $msg)
     {
-        return $this->session->setFlash($name, $msg);
+        return $this->session->getFlashBag()->add($name, $msg);
     }
 }

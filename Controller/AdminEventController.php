@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Blackroom\Bundle\EventBundle\Controller;
+namespace Black\Bundle\EventBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +18,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\EventBundle\Model\EventInterface;
 
 /**
  * Controller managing the event profile
@@ -57,6 +60,32 @@ class AdminEventController extends Controller
         );
     }
 
+    /**
+     * Show lists of Events
+     *
+     * @Method("GET")
+     * @Route("/{id}/show.html", name="admin_event_show")
+     * @Secure(roles="ROLE_USER")
+     * @Template()
+     */
+    public function showAction($id)
+    {
+        $documentManager = $this->getDocumentManager();
+        $repository = $documentManager->getDocumentRepository();
+
+        $document   = $repository->findOneById($id);
+
+        if (!$document) {
+            throw $this->createNotFoundException('Unable to find Person document.');
+        }
+
+        $csrf   = $this->container->get('form.csrf_provider');
+
+        return array(
+            'document'  => $document,
+            'csrf'      => $csrf
+        );
+    }
 
     /**
      * Displays a form to create a new Event document.
@@ -71,7 +100,7 @@ class AdminEventController extends Controller
         $documentManager    = $this->getDocumentManager();
         $document           = $documentManager->createEvent();
 
-        $formHandler    = $this->get('blackroom_event.event.form.handler');
+        $formHandler    = $this->get('black_event.event.form.handler');
         $process        = $formHandler->process($document);
 
         if ($process) {
@@ -114,7 +143,7 @@ class AdminEventController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        $formHandler    = $this->get('blackroom_event.event.form.handler');
+        $formHandler    = $this->get('black_event.event.form.handler');
         $process        = $formHandler->process($document);
 
         if ($process) {
@@ -142,7 +171,7 @@ class AdminEventController extends Controller
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If document doesn't exists
      */
-    public function deleteAction($id, $token = NULL)
+    public function deleteAction($id, $token = null)
     {
         $form       = $this->createDeleteForm($id);
         $request    = $this->getRequest();
@@ -166,13 +195,52 @@ class AdminEventController extends Controller
             $dm->remove($document);
             $dm->flush();
 
-            $this->get('session')->setFlash('success', 'This event was successfully deleted!');
+            $this->get('session')->getFlashBag()->add('success', 'success.event.admin.event.delete');
 
         } else {
-            $this->setFlash('failure', 'The form is not valid');
+            $this->getFlashBag()->add('failure', 'failure.form.not.valid');
         }
 
         return $this->redirect($this->generateUrl('admin_events'));
+    }
+
+    /**
+     * Delete an Attendee from document.
+     *
+     * @Method({"GET"})
+     * @Route("/{event}/delete/{person}", name="admin_event_attendee_delete")
+     * @Secure(roles="ROLE_USER")
+     *
+     * @ParamConverter("person", class="ActivCompany\Bundle\ERPBundle\Document\Person")
+     * @ParamConverter("event", class="ActivCompany\Bundle\ERPBundle\Document\Event")
+     *
+     * @param PersonInterface $person
+     * @param EventInterface  $event
+     * @param null            $token
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If document doesn't exists
+     */
+    public function deleteAttendeeAction(PersonInterface $person, EventInterface $event, $token = null)
+    {
+        $request    = $this->getRequest();
+
+        if (null === $token) {
+            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete' . $event->getId(), $request->query->get('token'));
+        }
+
+        if (true === $token) {
+            $dm = $this->getDocumentManager();
+            $event->removeAttendee($person);
+            $dm->flush();
+
+            $this->get('session')->getFlashBag()->add('success', 'success.event.admin.attendee.delete');
+
+        } else {
+            $this->get('session')->getFlashBag->add('failure', 'failure.form.not.valid');
+        }
+
+        return $this->redirect($this->generateUrl('admin_event_show', array('id' => $event->getId())));
     }
 
     /**
@@ -191,12 +259,12 @@ class AdminEventController extends Controller
         $token      = $this->get('form.csrf_provider')->isCsrfTokenValid('batch', $request->get('token'));
 
         if (!$ids = $request->get('ids')) {
-            $this->get('session')->setFlash('failure', 'You must select at least one item');
+            $this->get('session')->getFlashBag()->add('failure', 'failure.form.noitem');
             return $this->redirect($this->generateUrl('admin_events'));
         }
 
         if (!$action = $request->get('batchAction')) {
-            $this->get('session')->setFlash('failure', 'You must select an action to execute on the selected items');
+            $this->get('session')->getFlashBag()->add('failure', 'failure.form.noaction');
             return $this->redirect($this->generateUrl('admin_events'));
         }
 
@@ -207,7 +275,7 @@ class AdminEventController extends Controller
         }
 
         if (false === $token) {
-            $this->get('session')->setFlash('failure', 'CSRF Attack detected! This is bad. Very Bad hombre!');
+            $this->get('session')->getFlashBag()->add('failure', 'failure.form.crsf');
 
             return $this->redirect($this->generateUrl('admin_events'));
         }
@@ -218,6 +286,16 @@ class AdminEventController extends Controller
 
         return $this->redirect($this->generateUrl('admin_events'));
 
+    }
+
+    private function createDeleteAttendeeForm($user, $event)
+    {
+        $form = $this->createFormBuilder(array('user' => $user, 'event' => $event))
+            ->add('user', 'hidden')
+            ->add('event', 'hidden')
+            ->getForm();
+
+        return $form;
     }
 
     private function createDeleteForm($id)
@@ -231,6 +309,11 @@ class AdminEventController extends Controller
 
     protected function getDocumentManager()
     {
-        return $this->get('blackroom_event.manager.event');
+        return $this->get('black_event.manager.event');
+    }
+
+    protected function getPersonManager()
+    {
+        return $this->get('black_engine.manager.person');
     }
 }

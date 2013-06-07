@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\DependencyInjection;
+namespace Black\Bundle\EventBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class BlackroomEventExtension extends Extension
+class BlackEventExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -28,7 +28,7 @@ class BlackroomEventExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         if (!isset($config['db_driver'])) {
-            throw new \InvalidArgumentException('You must provide the blackroom_engine.db_driver configuration');
+            throw new \InvalidArgumentException('You must provide the black_engine.db_driver configuration');
         }
 
         try {
@@ -39,7 +39,7 @@ class BlackroomEventExtension extends Extension
 
         $this->remapParametersNamespaces($config, $container, array(
             ''  => array(
-                'event_class'    => 'blackroom_event.model.event.class',
+                'event_class'    => 'black_event.model.event.class'
             )
         ));
 
@@ -53,7 +53,7 @@ class BlackroomEventExtension extends Extension
         $loader->load('event.xml');
 
         $this->remapParametersNamespaces($config, $container, array(
-            'form' => 'blackroom_event.event.form.%s',
+            'form' => 'black_event.event.form.%s',
         ));
     }
 
@@ -90,6 +90,6 @@ class BlackroomEventExtension extends Extension
 
     public function getAlias()
     {
-        return 'blackroom_event';
+        return 'black_event';
     }
 }

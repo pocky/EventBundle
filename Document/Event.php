@@ -8,21 +8,21 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\Document\Event;
+namespace Black\Bundle\EventBundle\Document;
 
-use Blackroom\Bundle\EventBundle\Model\Event\Event as AbstractEvent;
-use Blackroom\Bundle\EngineBundle\Traits\ThingDocument;
+use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
+use Black\Bundle\EngineBundle\Traits\ThingDocumentTrait;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Blackroom\Bundle\EngineBundle\Model\Person\PersonInterface;
+use Black\Bundle\EngineBundle\Model\PersonInterface;
 
 /**
  * @ODM\MappedSuperClass()
  */
 abstract class Event extends AbstractEvent
 {
-    use ThingDocument;
+    use ThingDocumentTrait;
 
     /**
      * @ODM\String
@@ -36,7 +36,7 @@ abstract class Event extends AbstractEvent
     protected $endDate;
 
     /**
-     * @ODM\EmbedOne(targetDocument="Blackroom\Bundle\EngineBundle\Document\Intangible\PostalAddress")
+     * @ODM\EmbedOne(targetDocument="Black\Bundle\EngineBundle\Document\PostalAddress")
      */
     protected $location;
 

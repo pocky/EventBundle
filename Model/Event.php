@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\Model\Event;
+namespace Black\Bundle\EventBundle\Model;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @MappedSuperClass
  */
-abstract class Event
+abstract class Event implements EventInterface
 {
     protected $id;
 
@@ -52,11 +52,6 @@ abstract class Event
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getAttendees()
-    {
-        return $this->attendees;
     }
 
     public function setDuration($duration)

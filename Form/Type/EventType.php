@@ -8,23 +8,32 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\Form\Type;
+namespace Black\Bundle\EventBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Blackroom\Bundle\EngineBundle\Form\Type\PostalAddressType;
+use Black\Bundle\EngineBundle\Form\Type\PostalAddressType;
 
 class EventType extends AbstractType
 {
-    private $class;
+    /**
+     * @var string
+     */
+    protected $class;
 
     /**
-     * @param string $class The Event class name
+     * @var
      */
-    public function __construct($class)
+    protected $postalType;
+
+    /**
+     * @param string $class The Person class name
+     */
+    public function __construct($class, PostalAddressType $postal)
     {
         $this->class = $class;
+        $this->postalType   = $postal;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -54,13 +63,13 @@ class EventType extends AbstractType
                 'label'         => 'event.admin.form.url',
                 'required'      => false
             ))
-            ->add('location', new PostalAddressType(), array(
+            ->add('location', $this->postalType, array(
                 'label'                 => 'event.admin.form.location',
                 'cascade_validation'    => true,
                 'required'              => false
             ))
             ->add('subEvents', 'collection', array(
-                'type'          => new SubEventType('ActivCompany\Bundle\ERPBundle\Document\Event'),
+                'type'          => new SubEventType($this->class, $this->postalType),
                 'label'         => 'event.admin.form.subEvent',
                 'allow_add'     => true,
                 'allow_delete'  => true,
@@ -78,7 +87,7 @@ class EventType extends AbstractType
                 'empty_value'   => 'event.admin.form.superEvent.empty'
             ))
             ->add('attendees', 'document', array(
-                'class'         => 'ActivCompany\Bundle\ERPBundle\Document\Person',
+                'class'         => $this->class,
                 'property'      => 'name',
                 'multiple'      => true,
                 'by_reference'  => false,
@@ -91,12 +100,13 @@ class EventType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-                'data_class' => $this->class,
+                'data_class'    => $this->class,
+                'intention'     => 'event_form'
             ));
     }
 
     public function getName()
     {
-        return 'blackroom_event_event';
+        return 'black_event_event';
     }
 }

@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\DependencyInjection;
+namespace Black\Bundle\EventBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -27,7 +27,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('blackroom_event');
+        $rootNode = $treeBuilder->root('black_event');
 
         $supportedDrivers = array('mongodb');
 
@@ -63,9 +63,9 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('form')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('name')->defaultValue('blackroom_event_event')->end()
-                                ->scalarNode('type')->defaultValue('Blackroom\\Bundle\\EventBundle\\Form\\Type\\EventType')->end()
-                                ->scalarNode('handler')->defaultValue('Blackroom\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler')->end()
+                                ->scalarNode('name')->defaultValue('black_event_event')->end()
+                                ->scalarNode('type')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Type\\EventType')->end()
+                                ->scalarNode('handler')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler')->end()
                             ->end()
                         ->end()
                     ->end()

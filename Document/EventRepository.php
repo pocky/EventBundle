@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Blackroom\Bundle\EventBundle\Document\Event;
+namespace Black\Bundle\EventBundle\Document;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\DocumentNotFoundException;
@@ -18,7 +18,7 @@ class EventRepository extends DocumentRepository
     public function getLastEvents($limit = 3)
     {
         $qb = $this->getQueryBuilder()
-                ->sort('createdAt', 'desc')
+                ->sort('startDate', 'desc')
                 ->limit($limit)
                 ->getQuery()
         ;
