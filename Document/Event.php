@@ -66,4 +66,12 @@ abstract class Event extends AbstractEvent
      * @ODM\ReferenceOne(targetDocument="Event", cascade={"all"})
      */
     protected $superEvent;
+    
+    /**
+     * @ODM\PreRemove
+     */
+    public function onRemove()
+    {
+        parent::onRemove();
+    }
 }

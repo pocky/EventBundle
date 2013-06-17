@@ -1,0 +1,77 @@
+event:
+  admin:
+      
+    breadLine:
+      event:
+        breadcrumb:
+          a:
+            text: Gérer les événements
+            title: Gérer les événements
+        new:
+          text: Créer un événement
+      shortcut:
+        text: Raccourci
+        
+    contentTop:
+      new:
+        text: Créer un événement
+      edit:
+        text: Editer un événement
+      event:
+        text: Evénements
+      show:
+        text: Voir l'événement
+          
+    edit:
+      event:
+        text: Modifier un événement
+    
+    index:
+      event:
+        text: Evénements
+    
+    js:
+      remove:
+        text: Enlever
+    
+    new:
+      page:
+        text: Nouveau événement
+        
+    mainNav:
+      event:
+        a:
+          text: Evénements
+          title: Evénements
+        img:
+          alt: Evénements
+
+    row:
+      show:
+        title: Voir
+        
+    sidebar:
+      event:
+        text: Evénements
+        a:
+          text: Liste des événements
+          title: Liste des événements
+        
+    show:
+      attendees:
+        text: Liste des invités
+        registered:
+          text: %registered% invité(s)
+      edit:
+        a:
+          text: Editer
+          title: Editer
+      event:
+        text: Evénements
+        empty: Il n'a pas encore participé à un événement
+      informations:
+        text: Informations
+      notes:
+        text: Description
+        empty:
+          text: Il n'y a pas de description pour cet événement

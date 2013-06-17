@@ -25,6 +25,15 @@ class EventRepository extends DocumentRepository
 
         return $qb->execute();
     }
+    
+    public function getEventsForPerson($id) {
+        $qb = $this->getQueryBuilder()
+                ->field('attendees.$id', new \MongoId($id))
+                ->getQuery()
+        ;
+
+        return $qb->execute();
+    }
 
     private function getQueryBuilder()
     {
