@@ -14,6 +14,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Black\Bundle\EngineBundle\Form\Type\PostalAddressType;
+use Black\Bundle\EngineBundle\Document\Person;
 
 class EventType extends AbstractType
 {
@@ -28,49 +29,62 @@ class EventType extends AbstractType
     protected $postalType;
 
     /**
+     * @var
+     */
+    protected $personDocument;
+    
+    /**
      * @param string $class The Person class name
      */
-    public function __construct($class, PostalAddressType $postal)
+    public function __construct($class, PostalAddressType $postal, Person $person)
     {
         $this->class = $class;
         $this->postalType   = $postal;
+        $this->personDocument   = $person;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', 'text', array(
-                'label'         => 'event.admin.form.name',
+                'label'         => 'event.admin.event.name.text',
             ))
             ->add('description', 'textarea', array(
-                'label'         => 'event.admin.form.description',
+                'label'         => 'event.admin.event.description.text',
                 'required'      => false
             ))
             ->add('startDate', 'date', array(
-                'label'         => 'event.admin.form.startDate',
-                'empty_value'   => array('year' => 'admin.form.date.year', 'month' => 'admin.form.date.month', 'day' => 'admin.form.date.day')
+                'required'      => true,
+                'label'         => 'event.admin.event.startDate.text',
+                'empty_value'   => array(
+                    'year' => 'event.admin.event.startDate.choice.year',
+                    'month' => 'event.admin.event.startDate.choice.month', 
+                    'day' => 'event.admin.event.startDate.choice.day')
             ))
             ->add('endDate', 'date', array(
                 'required'      => false,
-                'label'         => 'event.admin.form.endDate',
-                'empty_value'   =>  array('year' => 'admin.form.date.year', 'month' => 'admin.form.date.month', 'day' => 'admin.form.date.day')
+                'label'         => 'event.admin.event.endDate.text',
+                'empty_value'   =>  array(
+                    'year' => 'event.admin.event.endDate.choice.year',
+                    'month' => 'event.admin.event.endDate.choice.month', 
+                    'day' => 'event.admin.event.endDate.choice.day')
             ))
             ->add('duration', 'text', array(
-                'label'         => 'event.admin.form.duration',
+                'label'         => 'event.admin.event.duration.text',
                 'required'      => false
             ))
             ->add('url', 'url', array(
-                'label'         => 'event.admin.form.url',
+                'label'         => 'event.admin.event.url.text',
                 'required'      => false
             ))
             ->add('location', $this->postalType, array(
-                'label'                 => 'event.admin.form.location',
+                'label'                 => 'event.admin.event.location.text',
                 'cascade_validation'    => true,
                 'required'              => false
             ))
             ->add('subEvents', 'collection', array(
-                'type'          => new SubEventType($this->class, $this->postalType),
-                'label'         => 'event.admin.form.subEvent',
+                'type'          => new SubEventType($this->class, $this->postalType, $this->personDocument),
+                'label'         => 'event.admin.event.subEvent.text',
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'required'      => false,
@@ -82,16 +96,16 @@ class EventType extends AbstractType
             ->add('superEvent', 'document', array(
                 'class'         => $this->class,
                 'property'      => 'name',
-                'label'         => 'event.admin.form.superEvent.title',
+                'label'         => 'event.admin.event.superEvent.text',
                 'required'      => false,
-                'empty_value'   => 'event.admin.form.superEvent.empty'
+                'empty_value'   => 'event.admin.event.superEvent.empty'
             ))
             ->add('attendees', 'document', array(
-                'class'         => $this->class,
+                'class'         => get_class($this->personDocument),
                 'property'      => 'name',
                 'multiple'      => true,
                 'by_reference'  => false,
-                'label'         => 'event.admin.form.attendees',
+                'label'         => 'event.admin.event.attendees.text',
                 'required'      => false
             ))
         ;

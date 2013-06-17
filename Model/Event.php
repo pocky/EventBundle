@@ -12,6 +12,7 @@ namespace Black\Bundle\EventBundle\Model;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
 use Doctrine\Common\Collections\ArrayCollection;
+use Black\Bundle\EngineBundle\Model\PersonInterface;
 
 /**
  * @MappedSuperClass
@@ -114,17 +115,39 @@ abstract class Event implements EventInterface
         return $this->startDate;
     }
 
+    public function setSubEvent(EventInterface $subEvent)
+    {
+        $this->subEvents->add($subEvent);
+    }
+    
     public function setSubEvents($subEvents)
     {
-        $this->subEvents = $subEvents;
+        foreach ($subEvents as $subEvent){
+            $this->setSubEvent($subEvent);
+        }
     }
 
     public function getSubEvents()
     {
         return $this->subEvents;
     }
+    
+    public function addSubEvent(EventInterface $subEvent)
+    {
+        $subEvent->setSuperEvent($this);
+    }
+    
+    public function removeSubEvent(EventInterface $subEvent)
+    {
+       $subEvent->setSuperEvent(null);
+       
+       if ($this->getSubEvents()->contains($subEvent)) {
+           $this->getSubEvents()->removeElement($subEvent);
+       }
+    }
+    
 
-    public function setSuperEvent($superEvent)
+    public function setSuperEvent(EventInterface $superEvent)
     {
         $this->superEvent = $superEvent;
     }
@@ -132,5 +155,26 @@ abstract class Event implements EventInterface
     public function getSuperEvent()
     {
         return $this->superEvent;
+    }
+
+    public function removeAttendee(PersonInterface $attendee)
+    {
+        $this->getAttendees()->removeElement($attendee);
+    }
+    
+    public function cleanAttendees() {
+        foreach ($this->getAttendees() as $attendee) {
+            $this->removeAttendee($attendee);
+        }
+    }
+    
+    public function onRemove() {
+        
+        if (null !== $this->getSuperEvent()) {
+            $this->getSuperEvent()->removeSubEvent($this);
+            $this->setSuperEvent(null);
+        }
+        
+        $this->cleanAttendees();
     }
 }

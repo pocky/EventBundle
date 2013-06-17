@@ -1,73 +1,14 @@
-{% extends 'BlackAdminBundle::base.html.twig' %}
-{% block body %}
+{% extends 'BlackEventBundle:AdminEvent:base.html.twig' %}
+{% block content_top %}
+    {% include 'BlackAdminBundle:Admin:contentTop.html.twig' with {'title': "event.admin.contentTop.new.text"} %}
+{% endblock %}
+{% block page_content %}
+<div class="fluid">
 
-    {% include 'BlackAdminBundle:Admin:header.html.twig' %}
-    {% include 'BlackAdminBundle:Admin:sidebar.html.twig' %}
-    {% include 'BlackEventBundle:AdminEvent:sidebar.html.twig' %}
-
-    {% set title = "event.admin.new.title" %}
-    {% set admin_index = 'admin_events' %}
-    {% set admin_delete = 'admin_event_delete' %}
-
-    <div id="content">
-        {% include 'BlackAdminBundle:Admin:contentTop.html.twig' with {'title': "event.admin.new.title"} %}
-        {% include 'BlackEventBundle:AdminEvent:breadLine.html.twig' with {'route': 'admin_event_new', 'text': "event.admin.new.title"} %}
-
-        <!-- Main content -->
-        <div class="wrapper">
-
-            {% include 'BlackAdminBundle:AdminForm:errors.html.twig' with {'form': form} %}
-            {% include 'BlackAdminBundle:Admin:flashes.html.twig' with {'flashes': app.session.FlashBag()} %}
-
-            <div class="fluid">
-
-                <form id="validate" class="main grid9" action="{{ path('admin_event_new') }}"  method="post" {{ form_enctype(form) }}>
-                    <fieldset>
-                        {% include 'BlackAdminBundle:AdminForm:fieldset.html.twig' with {'form': form} %}
-                    </fieldset>
-                </form>
-
-                {% include 'BlackAdminBundle:AdminForm:actions.html.twig' %}
-
-                <div class="grid3">
-                    <div class="divider"><span></span></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        var contactCount = '{{ form.subEvents | length }}';
-
-        jQuery(document).ready(function() {
-            jQuery('#black_event_event_subEvents').children('.formRow').each(function() {
-                addTagFormDeleteLink($(this));
-            });
-
-            jQuery('#add-another-event').click(function() {
-                var addressList = jQuery('#black_event_event_subEvents');
-
-                var newWidget = addressList.attr('data-prototype');
-                newWidget = newWidget.replace(/__name__/g, contactCount);
-                contactCount++;
-
-                var newLi = jQuery('<li></li>').html(newWidget);
-                newLi.appendTo(jQuery('#black_event_event_subEvents'));
-
-                return false;
-            });
-        })
-
-        function addTagFormDeleteLink($tagFormLi) {
-            var $removeFormA = $('<a href="#">{% trans %}Remove this contact point{% endtrans %}</a>');
-            $tagFormLi.append($removeFormA);
-
-            $removeFormA.on('click', function(e) {
-                e.preventDefault();
-                $tagFormLi.remove();
-            });
-        }
-    </script>
-
+    <form id="validate" class="main" action="{{ path(admin_new, { 'id': document.id }) }}" method="post" {{ form_enctype(form) }}>
+        {% include 'BlackAdminBundle:AdminForm:fieldset.html.twig' with {'form': form, 'title': 'event.admin.new.event.txt'} %}
+    </form>
+    {% include 'BlackAdminBundle:AdminForm:actions.html.twig' with {'document': document} %}
+    {% include 'BlackEventBundle:AdminEvent:js.html.twig' with {'form': form} %}
+</div>
 {% endblock %}

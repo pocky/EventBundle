@@ -1,0 +1,33 @@
+<script type="text/javascript">
+        var subeventCount = '{{ form.subEvents | length }}';
+
+        jQuery(document).ready(function() {
+            jQuery('#black_event_event_subEvents').children('.formRow').each(function() {
+                addTagFormDeleteSubEvent($(this));
+            });
+
+            jQuery('#add-another-event').click(function() {
+                var addressList = jQuery('#black_event_event_subEvents');
+
+                var newWidget = addressList.attr('data-prototype');
+                newWidget = newWidget.replace(/__name__/g,subeventCount);
+                subeventCount++;
+
+                var newDiv = jQuery('<div class="formRow noBorderB"></div>').html(newWidget);
+                addTagFormDeleteSubEvent(newDiv)
+                newDiv.appendTo(jQuery('#black_event_event_subEvents'));
+
+                return false;
+            });
+        })
+
+        function addTagFormDeleteSubEvent($tagFormDiv) {
+            var $removeFormA = $('<a href="#" class="add buttonS bRed mt10">{% trans from "views" %}event.admin.js.remove.text{% endtrans %}</a>');
+            $tagFormDiv.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                e.preventDefault();
+                $tagFormDiv.remove();
+            });
+        }
+    </script>

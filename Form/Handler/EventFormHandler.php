@@ -38,11 +38,15 @@ class EventFormHandler
 
             if ($this->form->isValid()) {
 
-                $this->setFlash('success', $event->getName() . ' was successfully updated!');
+                foreach ($event->getSubEvents() as $sub) {
+                    $event->addSubEvent($sub);
+                }
+
+                $this->setFlash('success', 'success.event.admin.event.edit');
 
                 return true;
             } else {
-                $this->setFlash('failure', 'The form is not valid');
+                $this->setFlash('error', 'error.event.admin.event.not.valid');
             }
         }
     }

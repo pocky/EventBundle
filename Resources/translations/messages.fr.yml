@@ -1,66 +1,67 @@
-
-success:
-  event:
-    admin:
-      attendee:
-        delete: L'invité a correctement été supprimé de la liste!
-      event:
-        delete: L'événement a correctement été supprimé!
-        
-event:
-
-  admin:
-    person:
-      form:
-        event:
-          title: Événements
-          empty: Il n'y a pas encore d'événement
-          
-    event:
-      title: Evènements
-      sidebar:
-        list:
-          span: Gérer vos évènements
-          a: Accéder à la liste de vos évènements
-
-    list:
-      name: Nom de l'événement
-
-    shortcut:
-      new: Créer un évènement
-
-    new:
-      title: Créer un évènement
-
-    edit:
-      title: Editer un évènement
-
-    form:
-      name: Nom de l'évènement
-      description: Description
-      startDate: Date de début
-      endDate: Date de fin
-      duration: Durée
-      url: Site internet
-      location: Lieu
-      subEvent: Sous-évènements
-      superEvent:
-        title: Evénement principal
-        empty: Choisir un évènement
-      attendees: Clients attendus
-
-
-    show:
-      informations:
-        edit: Editer l'évenement
-        attendees: <strong>%registered%</strong> clients inscrits
-        export:
-          actions: Exporter les participants
-          title: Invitations
-          i: Invitation uniquement
-          v: Vernissage seulement
-          iv: Invitation et Vernissage
-          all: Tous les invités
-          newsletter: Newsletter (listing excel)
-      attendees:
-        title: Invités
+#
+#success:
+#  event:
+#    admin:
+#      attendee:
+#        delete: L'invité a correctement été supprimé de la liste!
+#      event:
+#        delete: L'événement a correctement été supprimé!
+#        edit: L'événement a correctement été modifié!
+#        
+#event:
+#
+#  admin:
+#    person:
+#      form:
+#        event:
+#          title: Événements
+#          empty: Il n'y a pas encore d'événement
+#          
+#    event:
+#      title: Evènements
+#      sidebar:
+#        list:
+#          span: Gérer vos évènements
+#          a: Accéder à la liste de vos évènements
+#
+#    list:
+#      name: Nom de l'événement
+#
+#    shortcut:
+#      new: Créer un évènement
+#
+#    new:
+#      title: Créer un évènement
+#
+#    edit:
+#      title: Editer un évènement
+#
+#    form:
+#      name: Nom de l'évènement
+#      description: Description
+#      startDate: Date de début
+#      endDate: Date de fin
+#      duration: Durée
+#      url: Site internet
+#      location: Lieu
+#      subEvent: Sous-évènements
+#      superEvent:
+#        title: Evénement principal
+#        empty: Choisir un évènement
+#      attendees: Clients attendus
+#
+#
+#    show:
+#      informations:
+#        edit: Editer l'évenement
+#        attendees: <strong>%registered%</strong> clients inscrits
+#        export:
+#          actions: Exporter les participants
+#          title: Invitations
+#          i: Invitation uniquement
+#          v: Vernissage seulement
+#          iv: Invitation et Vernissage
+#          all: Tous les invités
+#          newsletter: Newsletter (listing excel)
+#      attendees:
+#        title: Invités
