@@ -35,8 +35,8 @@ event:
         text: Enlever
     
     new:
-      page:
-        text: Nouveau événement
+      event:
+        text: Nouvel événement
         
     mainNav:
       event:

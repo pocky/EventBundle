@@ -112,7 +112,7 @@ class AdminEventController extends Controller
     public function newAction()
     {
         $documentManager    = $this->getDocumentManager();
-        $document           = $documentManager->createEvent();
+        $document           = $documentManager->createInstance();
 
         $formHandler    = $this->get('black_event.event.form.handler');
         $process        = $formHandler->process($document);
