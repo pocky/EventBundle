@@ -39,8 +39,8 @@ class AdminEventController extends Controller
      */
     public function indexAction()
     {
-        $manager    = $this->getDocumentManager();
-        $repository = $manager->getDocumentRepository();
+        $manager    = $this->getManager();
+        $repository = $manager->getRepository();
         $rawDocuments  = $repository->findAll();
 
         $csrf       = $this->container->get('form.csrf_provider');
@@ -70,8 +70,8 @@ class AdminEventController extends Controller
      */
     public function showAction($id)
     {
-        $documentManager = $this->getDocumentManager();
-        $repository = $documentManager->getDocumentRepository();
+        $documentManager = $this->getManager();
+        $repository = $documentManager->getRepository();
 
         $document   = $repository->findOneById($id);
 
@@ -111,7 +111,7 @@ class AdminEventController extends Controller
      */
     public function newAction()
     {
-        $documentManager    = $this->getDocumentManager();
+        $documentManager    = $this->getManager();
         $document           = $documentManager->createInstance();
 
         $formHandler    = $this->get('black_event.event.form.handler');
@@ -146,8 +146,8 @@ class AdminEventController extends Controller
      */
     public function editAction($id)
     {
-        $documentManager = $this->getDocumentManager();
-        $repository = $documentManager->getDocumentRepository();
+        $documentManager = $this->getManager();
+        $repository = $documentManager->getRepository();
 
         $document = $repository->findOneById($id);
 
@@ -198,8 +198,8 @@ class AdminEventController extends Controller
         
         if ($form->isValid() || true === $token) {
 
-            $dm         = $this->getDocumentManager();
-            $repository = $dm->getDocumentRepository();
+            $dm         = $this->getManager();
+            $repository = $dm->getRepository();
             $document   = $repository->findOneById($id);
             
             if (!$document) {
@@ -244,7 +244,7 @@ class AdminEventController extends Controller
         }
 
         if (true === $token) {
-            $dm = $this->getDocumentManager();
+            $dm = $this->getManager();
             $event->removeAttendee($person);
             $dm->flush();
 
@@ -321,7 +321,7 @@ class AdminEventController extends Controller
         return $form;
     }
 
-    protected function getDocumentManager()
+    protected function getManager()
     {
         return $this->get('black_event.manager.event');
     }
