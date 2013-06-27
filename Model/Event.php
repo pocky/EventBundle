@@ -55,6 +55,16 @@ abstract class Event implements EventInterface
         return $this->id;
     }
 
+    public function setAttendees($attendees)
+    {
+        $this->attendees = $attendees;
+    }
+
+    public function getAttendees()
+    {
+        return $this->attendees;
+    }
+
     public function setDuration($duration)
     {
         $this->duration = $duration;
@@ -157,6 +167,11 @@ abstract class Event implements EventInterface
         return $this->superEvent;
     }
 
+    public function addAttendee(PersonInterface $attendee)
+    {
+        $this->getAttendees()->add($attendee);
+    }
+    
     public function removeAttendee(PersonInterface $attendee)
     {
         $this->getAttendees()->removeElement($attendee);

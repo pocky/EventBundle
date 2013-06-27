@@ -28,7 +28,7 @@ class BlackEventExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         if (!isset($config['db_driver'])) {
-            throw new \InvalidArgumentException('You must provide the black_engine.db_driver configuration');
+            throw new \InvalidArgumentException('You must provide the black_event.db_driver configuration');
         }
 
         try {
@@ -39,6 +39,7 @@ class BlackEventExtension extends Extension
 
         $this->remapParametersNamespaces($config, $container, array(
             ''  => array(
+                'db_driver'      => 'black_event.db_driver',
                 'event_class'    => 'black_event.model.event.class'
             )
         ));

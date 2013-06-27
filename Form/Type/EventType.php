@@ -14,7 +14,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Black\Bundle\EngineBundle\Form\Type\PostalAddressType;
-use Black\Bundle\EngineBundle\Document\Person;
+use Black\Bundle\EngineBundle\Model\PersonInterface;
 
 class EventType extends AbstractType
 {
@@ -31,16 +31,17 @@ class EventType extends AbstractType
     /**
      * @var
      */
-    protected $personDocument;
+    protected $person;
     
     /**
      * @param string $class The Person class name
      */
-    public function __construct($class, PostalAddressType $postal, Person $person)
+    public function __construct($dbDriver, $class, PostalAddressType $postal, PersonInterface $person)
     {
+        $this->dbDriver = $dbDriver;
         $this->class = $class;
         $this->postalType   = $postal;
-        $this->personDocument   = $person;
+        $this->person   = $person;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -83,7 +84,7 @@ class EventType extends AbstractType
                 'required'              => false
             ))
             ->add('subEvents', 'collection', array(
-                'type'          => new SubEventType($this->class, $this->postalType, $this->personDocument),
+                'type'          => new SubEventType($this->dbDriver, $this->class, $this->postalType, $this->person),
                 'label'         => 'event.admin.event.subEvent.text',
                 'allow_add'     => true,
                 'allow_delete'  => true,
@@ -92,7 +93,9 @@ class EventType extends AbstractType
                     'class' => 'event-collection',
                     'add'   => 'add-another-event'
                 ),
-            ))
+            ));
+        if($this->dbDriver == 'mongodb') {
+            $builder
             ->add('superEvent', 'document', array(
                 'class'         => $this->class,
                 'property'      => 'name',
@@ -101,14 +104,31 @@ class EventType extends AbstractType
                 'empty_value'   => 'event.admin.event.superEvent.empty'
             ))
             ->add('attendees', 'document', array(
-                'class'         => get_class($this->personDocument),
+                'class'         => get_class($this->person),
                 'property'      => 'name',
                 'multiple'      => true,
                 'by_reference'  => false,
                 'label'         => 'event.admin.event.attendees.text',
                 'required'      => false
+            ));
+        } else {
+            $builder
+            ->add('superEvent', 'entity', array(
+                'class'         => $this->class,
+                'property'      => 'name',
+                'label'         => 'event.admin.event.superEvent.text',
+                'required'      => false,
+                'empty_value'   => 'event.admin.event.superEvent.empty'
             ))
-        ;
+            ->add('attendees', 'entity', array(
+                'class'         => get_class($this->person),
+                'property'      => 'name',
+                'multiple'      => true,
+                'by_reference'  => false,
+                'label'         => 'event.admin.event.attendees.text',
+                'required'      => false
+            ));
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

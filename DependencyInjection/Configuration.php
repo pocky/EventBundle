@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('black_event');
 
-        $supportedDrivers = array('mongodb');
+        $supportedDrivers = array('mongodb', 'mysql');
 
         $rootNode
             ->children()
@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->validate()
                     ->ifNotInArray($supportedDrivers)
-                        ->thenInvalid('The database driver must be either \'mongodb\'.')
+                        ->thenInvalid('The database driver must be either \'mongodb\', \'mysql\'.')
                     ->end()
                 ->end()
 
