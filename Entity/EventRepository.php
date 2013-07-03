@@ -18,8 +18,9 @@ class EventRepository extends EntityRepository
     public function getLastEvents($limit = 3)
     {
         $qb = $this->getQueryBuilder()
-                ->sort('startDate', 'desc')
-                ->limit($limit)
+                ->select('e')
+                ->orderBy('startDate', 'DESC')
+                ->setMaxResults($limit)
                 ->getQuery();
 
         return $qb->execute();
@@ -28,7 +29,10 @@ class EventRepository extends EntityRepository
     public function getEventsForPerson($id)
     {
         $qb = $this->getQueryBuilder()
-                ->field('attendees.$id', new \MongoId($id))
+                ->select('e')
+                ->leftJoin('attendees', 'a')
+                ->where('a.id = :a_id')
+                ->setParameter('a_id', $id)
                 ->getQuery();
 
         return $qb->execute();
