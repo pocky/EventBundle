@@ -57,11 +57,8 @@ class Event extends AbstractEvent
     protected $attendees;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Black\Bundle\EngineBundle\Entity\PostalAddress", cascade={"persist", "remove"})
-     * @ORM\JoinTable(name="event_postal_address",
-     *      joinColumns={@ORM\JoinColumn(name="event_id", referencedColumnName="id", unique=true)},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="postal_address_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @ORM\OneToOne(targetEntity="Black\Bundle\EngineBundle\Entity\PostalAddress", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="postal_address_id", referencedColumnName="id")
      */
     protected $location;
 
@@ -81,22 +78,20 @@ class Event extends AbstractEvent
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
     protected $startDate;
-
+    
     /**
-     * @ORM\ManyToOne(targetEntity="Event", cascade={"persist", "remove"})
-     * @ORM\JoinTable(name="event_super_event",
-     *      joinColumns={@ORM\JoinColumn(name="event_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="sub_event_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="superEvent", cascade={"persist", "remove"})
      */
     protected $subEvents;
 
     /**
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="subEvents", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="subEvents", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="super_event_id", referencedColumnName="id", nullable=true)
      */
     protected $superEvent;
     
-    public function __construct() {
+    public function __construct()
+    {
         $this->setCreatedAt(new \DateTime());
         $this->setUpdatedAt(new \DateTime());
         $this->subEvents = new \Doctrine\Common\Collections\ArrayCollection();

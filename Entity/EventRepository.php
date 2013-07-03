@@ -20,17 +20,16 @@ class EventRepository extends EntityRepository
         $qb = $this->getQueryBuilder()
                 ->sort('startDate', 'desc')
                 ->limit($limit)
-                ->getQuery()
-        ;
+                ->getQuery();
 
         return $qb->execute();
     }
     
-    public function getEventsForPerson($id) {
+    public function getEventsForPerson($id)
+    {
         $qb = $this->getQueryBuilder()
                 ->field('attendees.$id', new \MongoId($id))
-                ->getQuery()
-        ;
+                ->getQuery();
 
         return $qb->execute();
     }

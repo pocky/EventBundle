@@ -14,7 +14,8 @@ use Black\Bundle\EngineBundle\Document\BaseManager;
 
 class EventManager extends BaseManager
 {
-    public function findEventsForPerson($id) {
-      return $this->getRepository()->getEventsForPerson($id);
+    public function findEventsForPerson($id)
+    {
+        return $this->getRepository()->getEventsForPerson($id);
     }
 }

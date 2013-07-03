@@ -84,7 +84,12 @@ class AdminEventController extends Controller
         $attendees = array();
         
         foreach ($document->getAttendees() as $attendee) {
-            $country = $attendee->getAddress()->first()? $attendee->getAddress()->first()->getAddressCountryLocale($this->getRequest()->getLocale()) : false;
+            if ($attendee->getAddress()->first() != null) {
+                $country = $attendee->getAddress()->first()->getAddressCountryLocale($this->getRequest()->getLocale());
+            } else {
+                $country = false;
+            }
+            
             $attendees[] = array(
                 'id'                                                => $attendee->getId(),
                 'engine.admin.person.name.given.text'               => $attendee->getGivenName(),
@@ -240,7 +245,10 @@ class AdminEventController extends Controller
         $request    = $this->getRequest();
 
         if (null === $token) {
-            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete' . $event->getId(), $request->query->get('token'));
+            $token = $this->get('form.csrf_provider')->isCsrfTokenValid(
+                'delete' . $event->getId(),
+                $request->query->get('token')
+            );
         }
 
         if (true === $token) {

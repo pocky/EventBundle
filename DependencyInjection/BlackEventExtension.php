@@ -34,15 +34,21 @@ class BlackEventExtension extends Extension
         try {
             $loader->load(sprintf('%s.xml', $config['db_driver']));
         } catch (\InvalidArgumentException $e) {
-            throw new \InvalidArgumentException(sprintf('The db_driver "%s" is not supported by engine', $config['db_driver']));
+            throw new \InvalidArgumentException(
+                sprintf('The db_driver "%s" is not supported by engine', $config['db_driver'])
+            );
         }
 
-        $this->remapParametersNamespaces($config, $container, array(
-            ''  => array(
-                'db_driver'      => 'black_event.db_driver',
-                'event_class'    => 'black_event.model.event.class'
+        $this->remapParametersNamespaces(
+            $config,
+            $container,
+            array(
+                ''  => array(
+                    'db_driver'      => 'black_event.db_driver',
+                    'event_class'    => 'black_event.model.event.class'
+                )
             )
-        ));
+        );
 
         if (!empty($config['event'])) {
             $this->loadEvent($config['event'], $container, $loader);
@@ -53,9 +59,13 @@ class BlackEventExtension extends Extension
     {
         $loader->load('event.xml');
 
-        $this->remapParametersNamespaces($config, $container, array(
-            'form' => 'black_event.event.form.%s',
-        ));
+        $this->remapParametersNamespaces(
+            $config,
+            $container,
+            array(
+                'form' => 'black_event.event.form.%s',
+            )
+        );
     }
 
     protected function remapParameters(array $config, ContainerBuilder $container, array $map)
