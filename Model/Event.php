@@ -55,6 +55,16 @@ abstract class Event implements EventInterface
         return $this->id;
     }
 
+    public function setAttendees($attendees)
+    {
+        $this->attendees = $attendees;
+    }
+
+    public function getAttendees()
+    {
+        return $this->attendees;
+    }
+
     public function setDuration($duration)
     {
         $this->duration = $duration;
@@ -122,7 +132,7 @@ abstract class Event implements EventInterface
     
     public function setSubEvents($subEvents)
     {
-        foreach ($subEvents as $subEvent){
+        foreach ($subEvents as $subEvent) {
             $this->setSubEvent($subEvent);
         }
     }
@@ -132,24 +142,37 @@ abstract class Event implements EventInterface
         return $this->subEvents;
     }
     
-    public function addSubEvent(EventInterface $subEvent)
+    public function addSubEvent($subEvent)
     {
-        $subEvent->setSuperEvent($this);
+        if ($subEvent instanceof Event) {
+            $subEvent->setSuperEvent($this);
+        }
     }
     
-    public function removeSubEvent(EventInterface $subEvent)
+    public function removeSubEvent($subEvent)
     {
-       $subEvent->setSuperEvent(null);
-       
-       if ($this->getSubEvents()->contains($subEvent)) {
-           $this->getSubEvents()->removeElement($subEvent);
-       }
-    }
-    
+        if ($subEvent instanceof Event) {
+            $subEvent->setSuperEvent(null);
 
-    public function setSuperEvent(EventInterface $superEvent)
+            if ($this->getSubEvents()->contains($subEvent)) {
+                $this->getSubEvents()->removeElement($subEvent);
+            }
+        }
+    }
+    
+    public function cleanSubEvents()
     {
-        $this->superEvent = $superEvent;
+        foreach ($this->subEvents as $subEvent) {
+            $this->removeSubEvent($subEvent);
+        }
+        $this->getSubEvents()->clear();
+    }
+
+    public function setSuperEvent($superEvent)
+    {
+        if ($superEvent instanceof Event || $superEvent === null) {
+            $this->superEvent = $superEvent;
+        }
     }
 
     public function getSuperEvent()
@@ -157,19 +180,25 @@ abstract class Event implements EventInterface
         return $this->superEvent;
     }
 
+    public function addAttendee(PersonInterface $attendee)
+    {
+        $this->getAttendees()->add($attendee);
+    }
+    
     public function removeAttendee(PersonInterface $attendee)
     {
         $this->getAttendees()->removeElement($attendee);
     }
     
-    public function cleanAttendees() {
+    public function cleanAttendees()
+    {
         foreach ($this->getAttendees() as $attendee) {
             $this->removeAttendee($attendee);
         }
     }
     
-    public function onRemove() {
-        
+    public function onRemove()
+    {
         if (null !== $this->getSuperEvent()) {
             $this->getSuperEvent()->removeSubEvent($this);
             $this->setSuperEvent(null);

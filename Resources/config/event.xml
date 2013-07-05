@@ -12,6 +12,7 @@
         </service>
 
         <service id="black_event.event.form.type" class="%black_event.event.form.type%" scope="request">
+            <argument>%black_event.db_driver%</argument>
             <argument>%black_event.model.event.class%</argument>
             <argument type="service" id="black_engine.postaladdress.form.type" />
             <argument type="service" id="black_engine.person.model.class" />

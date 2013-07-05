@@ -75,3 +75,8 @@ event:
         text: Description
         empty:
           text: Il n'y a pas de description pour cet événement
+    
+    table:
+      record:
+        empty:
+          text: Aucun événement trouvé
