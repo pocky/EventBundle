@@ -20,7 +20,7 @@ use Black\Bundle\EngineBundle\Model\PersonInterface;
 /**
  * @ODM\MappedSuperClass()
  */
-abstract class Event extends AbstractEvent
+class Event extends AbstractEvent
 {
     use ThingDocumentTrait;
 
