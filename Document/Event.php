@@ -20,7 +20,7 @@ use Black\Bundle\EngineBundle\Model\PersonInterface;
 /**
  * @ODM\MappedSuperClass()
  */
-abstract class Event extends AbstractEvent
+class Event extends AbstractEvent
 {
     use ThingDocumentTrait;
 
@@ -66,4 +66,12 @@ abstract class Event extends AbstractEvent
      * @ODM\ReferenceOne(targetDocument="Event", cascade={"all"})
      */
     protected $superEvent;
+    
+    /**
+     * @ODM\PreRemove
+     */
+    public function onRemove()
+    {
+        parent::onRemove();
+    }
 }

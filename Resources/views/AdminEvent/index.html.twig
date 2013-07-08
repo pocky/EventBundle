@@ -1,39 +1,16 @@
-{% extends 'BlackAdminBundle::base.html.twig' %}
-{% block body %}
-
-    {% include 'BlackAdminBundle:Admin:header.html.twig' %}
-    {% include 'BlackAdminBundle:Admin:sidebar.html.twig' %}
-    {% include 'BlackEventBundle:AdminEvent:sidebar.html.twig' %}
-    <!-- todo: prise en charge de la pagination -->
-
-    {% set admin_edit = 'admin_event_edit' %}
-    {% set admin_delete = 'admin_event_delete' %}
-    {% set admin_show = 'admin_event_show' %}
-
-    <div id="content">
-
-        {% include 'BlackAdminBundle:Admin:contentTop.html.twig' with {'title': "event.admin.event.sidebar.list.span"} %}
-        {% include 'BlackEventBundle:AdminEvent:breadLine.html.twig' with {'route': 'admin_event_new', 'text': "event.admin.shortcut.new"} %}
-
-        <!-- Main content -->
-        <div class="wrapper">
-
-            {% include 'BlackAdminBundle:Admin:flashes.html.twig' with {'flashes': app.session.FlashBag()} %}
-
-            <form id="validate" class="main grid9" action="{{ path('admin_event_batch') }}" method="post">
-                <div class="fluid">
-                    <div class="widget check">
-                        <div class="whead">
-                            <span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span>
-                            <h6>{% trans %}event.admin.event.title{% endtrans %}</h6>
-                            <div class="clear"></div>
-                        </div>
-
-                        {% include 'BlackAdminBundle:AdminTable:table.html.twig' with {'documents': documents, 'csrf': csrf} %}
-                    </div>
+{% extends 'BlackEventBundle:AdminEvent:base.html.twig' %}
+{% block page_content %}
+    <form id="validate" class="main grid9" action="{{ path('admin_event_batch') }}" method="post">
+        <div class="fluid">
+            <div class="widget check">
+                <div class="whead">
+                    <span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span>
+                    <h6>{% trans from "views" %}event.admin.index.event.text{% endtrans %}</h6>
+                    <div class="clear"></div>
                 </div>
-            </form>
-        </div>
-    </div>
 
+                {% include 'BlackEventBundle:AdminEvent:table.html.twig' with {'documents': documents, 'csrf': csrf} %}
+            </div>
+        </div>
+    </form>
 {% endblock %}

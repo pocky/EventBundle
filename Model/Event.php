@@ -12,6 +12,7 @@ namespace Black\Bundle\EventBundle\Model;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
 use Doctrine\Common\Collections\ArrayCollection;
+use Black\Bundle\EngineBundle\Model\PersonInterface;
 
 /**
  * @MappedSuperClass
@@ -52,6 +53,16 @@ abstract class Event implements EventInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setAttendees($attendees)
+    {
+        $this->attendees = $attendees;
+    }
+
+    public function getAttendees()
+    {
+        return $this->attendees;
     }
 
     public function setDuration($duration)
@@ -114,23 +125,85 @@ abstract class Event implements EventInterface
         return $this->startDate;
     }
 
+    public function setSubEvent(EventInterface $subEvent)
+    {
+        $this->subEvents->add($subEvent);
+    }
+    
     public function setSubEvents($subEvents)
     {
-        $this->subEvents = $subEvents;
+        foreach ($subEvents as $subEvent) {
+            $this->setSubEvent($subEvent);
+        }
     }
 
     public function getSubEvents()
     {
         return $this->subEvents;
     }
+    
+    public function addSubEvent($subEvent)
+    {
+        if ($subEvent instanceof Event) {
+            $subEvent->setSuperEvent($this);
+        }
+    }
+    
+    public function removeSubEvent($subEvent)
+    {
+        if ($subEvent instanceof Event) {
+            $subEvent->setSuperEvent(null);
+
+            if ($this->getSubEvents()->contains($subEvent)) {
+                $this->getSubEvents()->removeElement($subEvent);
+            }
+        }
+    }
+    
+    public function cleanSubEvents()
+    {
+        foreach ($this->subEvents as $subEvent) {
+            $this->removeSubEvent($subEvent);
+        }
+        $this->getSubEvents()->clear();
+    }
 
     public function setSuperEvent($superEvent)
     {
-        $this->superEvent = $superEvent;
+        if ($superEvent instanceof Event || $superEvent === null) {
+            $this->superEvent = $superEvent;
+        }
     }
 
     public function getSuperEvent()
     {
         return $this->superEvent;
+    }
+
+    public function addAttendee(PersonInterface $attendee)
+    {
+        $this->getAttendees()->add($attendee);
+    }
+    
+    public function removeAttendee(PersonInterface $attendee)
+    {
+        $this->getAttendees()->removeElement($attendee);
+    }
+    
+    public function cleanAttendees()
+    {
+        foreach ($this->getAttendees() as $attendee) {
+            $this->removeAttendee($attendee);
+        }
+    }
+    
+    public function onRemove()
+    {
+        if (null !== $this->getSuperEvent()) {
+            $this->getSuperEvent()->removeSubEvent($this);
+            $this->setSuperEvent(null);
+        }
+        
+        $this->cleanAttendees();
     }
 }

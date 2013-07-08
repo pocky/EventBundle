@@ -17,7 +17,8 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 /**
  * This is the class that validates and merges configuration from your app/config files
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * To learn more see 
+ * {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
 class Configuration implements ConfigurationInterface
 {
@@ -29,7 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('black_event');
 
-        $supportedDrivers = array('mongodb');
+        $supportedDrivers = array('mongodb', 'mysql');
 
         $rootNode
             ->children()
@@ -38,14 +39,11 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->validate()
                     ->ifNotInArray($supportedDrivers)
-                        ->thenInvalid('The database driver must be either \'mongodb\'.')
+                        ->thenInvalid('The database driver must be either \'mongodb\', \'mysql\'.')
                     ->end()
                 ->end()
-
                 ->scalarNode('event_class')->isRequired()->cannotBeEmpty()->end()
-
-            ->end()
-        ;
+            ->end();
 
         $this->addEventSection($rootNode);
 
@@ -64,13 +62,16 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('name')->defaultValue('black_event_event')->end()
-                                ->scalarNode('type')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Type\\EventType')->end()
-                                ->scalarNode('handler')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler')->end()
+                                ->scalarNode('type')->defaultValue(
+                                    'Black\\Bundle\\EventBundle\\Form\\Type\\EventType'
+                                )->end()
+                                ->scalarNode('handler')->defaultValue(
+                                    'Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler'
+                                )->end()
                             ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
     }
 }

@@ -39,8 +39,8 @@ class AdminEventController extends Controller
      */
     public function indexAction()
     {
-        $manager    = $this->getDocumentManager();
-        $repository = $manager->getDocumentRepository();
+        $manager    = $this->getManager();
+        $repository = $manager->getRepository();
         $rawDocuments  = $repository->findAll();
 
         $csrf       = $this->container->get('form.csrf_provider');
@@ -50,7 +50,7 @@ class AdminEventController extends Controller
         foreach ($rawDocuments as $document) {
             $documents[] = array(
                 'id'                        => $document->getId(),
-                'event.admin.list.name'     => $document->getName()
+                'event.admin.event.name.text'     => $document->getName()
             );
         }
 
@@ -70,8 +70,8 @@ class AdminEventController extends Controller
      */
     public function showAction($id)
     {
-        $documentManager = $this->getDocumentManager();
-        $repository = $documentManager->getDocumentRepository();
+        $documentManager = $this->getManager();
+        $repository = $documentManager->getRepository();
 
         $document   = $repository->findOneById($id);
 
@@ -81,8 +81,27 @@ class AdminEventController extends Controller
 
         $csrf   = $this->container->get('form.csrf_provider');
 
+        $attendees = array();
+        
+        foreach ($document->getAttendees() as $attendee) {
+            if ($attendee->getAddress()->first() != null) {
+                $country = $attendee->getAddress()->first()->getAddressCountryLocale($this->getRequest()->getLocale());
+            } else {
+                $country = false;
+            }
+            
+            $attendees[] = array(
+                'id'                                                => $attendee->getId(),
+                'engine.admin.person.name.given.text'               => $attendee->getGivenName(),
+                'engine.admin.person.name.family.text'              => $attendee->getFamilyName(),
+                'engine.admin.person.email.text'                    => $attendee->getEmail(),
+                'engine.admin.postalAddress.address.country.text'   => $country
+            );
+        }
+        
         return array(
             'document'  => $document,
+            'attendees' => $attendees,
             'csrf'      => $csrf
         );
     }
@@ -97,8 +116,8 @@ class AdminEventController extends Controller
      */
     public function newAction()
     {
-        $documentManager    = $this->getDocumentManager();
-        $document           = $documentManager->createEvent();
+        $documentManager    = $this->getManager();
+        $document           = $documentManager->createInstance();
 
         $formHandler    = $this->get('black_event.event.form.handler');
         $process        = $formHandler->process($document);
@@ -132,8 +151,8 @@ class AdminEventController extends Controller
      */
     public function editAction($id)
     {
-        $documentManager = $this->getDocumentManager();
-        $repository = $documentManager->getDocumentRepository();
+        $documentManager = $this->getManager();
+        $repository = $documentManager->getRepository();
 
         $document = $repository->findOneById($id);
 
@@ -163,7 +182,7 @@ class AdminEventController extends Controller
      * Deletes an Event document.
      *
      * @Method({"POST", "GET"})
-     * @Route("/{id}/delete", name="admin_event_delete")
+     * @Route("/{id}/delete/{token}", name="admin_event_delete")
      * @Secure(roles="ROLE_ADMIN")
      * @param string $id The document ID
      *
@@ -178,16 +197,16 @@ class AdminEventController extends Controller
 
         $form->bind($request);
 
-        if (null === $token) {
-            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete' . $id, $request->query->get('token'));
+        if (null !== $token) {
+            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete' . $id, $token);
         }
-
+        
         if ($form->isValid() || true === $token) {
 
-            $dm         = $this->getDocumentManager();
-            $repository = $dm->getDocumentRepository();
+            $dm         = $this->getManager();
+            $repository = $dm->getRepository();
             $document   = $repository->findOneById($id);
-
+            
             if (!$document) {
                 throw $this->createNotFoundException('Unable to find Event document.');
             }
@@ -198,7 +217,7 @@ class AdminEventController extends Controller
             $this->get('session')->getFlashBag()->add('success', 'success.event.admin.event.delete');
 
         } else {
-            $this->getFlashBag()->add('failure', 'failure.form.not.valid');
+            $this->get('session')->getFlashBag()->add('error', 'error.event.admin.event.delete.not.valid');
         }
 
         return $this->redirect($this->generateUrl('admin_events'));
@@ -208,7 +227,7 @@ class AdminEventController extends Controller
      * Delete an Attendee from document.
      *
      * @Method({"GET"})
-     * @Route("/{event}/delete/{person}", name="admin_event_attendee_delete")
+     * @Route("/{event}/delete/attendee/{person}", name="admin_event_attendee_delete")
      * @Secure(roles="ROLE_USER")
      *
      * @ParamConverter("person", class="ActivCompany\Bundle\ERPBundle\Document\Person")
@@ -226,18 +245,21 @@ class AdminEventController extends Controller
         $request    = $this->getRequest();
 
         if (null === $token) {
-            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete' . $event->getId(), $request->query->get('token'));
+            $token = $this->get('form.csrf_provider')->isCsrfTokenValid(
+                'delete' . $event->getId(),
+                $request->query->get('token')
+            );
         }
 
         if (true === $token) {
-            $dm = $this->getDocumentManager();
+            $dm = $this->getManager();
             $event->removeAttendee($person);
             $dm->flush();
 
             $this->get('session')->getFlashBag()->add('success', 'success.event.admin.attendee.delete');
 
         } else {
-            $this->get('session')->getFlashBag->add('failure', 'failure.form.not.valid');
+            $this->get('session')->getFlashBag()->add('error', 'error.event.admin.attendee.delete.not.valid');
         }
 
         return $this->redirect($this->generateUrl('admin_event_show', array('id' => $event->getId())));
@@ -259,12 +281,12 @@ class AdminEventController extends Controller
         $token      = $this->get('form.csrf_provider')->isCsrfTokenValid('batch', $request->get('token'));
 
         if (!$ids = $request->get('ids')) {
-            $this->get('session')->getFlashBag()->add('failure', 'failure.form.noitem');
+            $this->get('session')->getFlashBag()->add('error', 'error.event.admin.batch.no.item');
             return $this->redirect($this->generateUrl('admin_events'));
         }
 
         if (!$action = $request->get('batchAction')) {
-            $this->get('session')->getFlashBag()->add('failure', 'failure.form.noaction');
+            $this->get('session')->getFlashBag()->add('error', 'error.event.admin.batch.no.action');
             return $this->redirect($this->generateUrl('admin_events'));
         }
 
@@ -275,7 +297,7 @@ class AdminEventController extends Controller
         }
 
         if (false === $token) {
-            $this->get('session')->getFlashBag()->add('failure', 'failure.form.crsf');
+            $this->get('session')->getFlashBag()->add('error', 'error.event.admin.batch.csrf');
 
             return $this->redirect($this->generateUrl('admin_events'));
         }
@@ -307,7 +329,7 @@ class AdminEventController extends Controller
         return $form;
     }
 
-    protected function getDocumentManager()
+    protected function getManager()
     {
         return $this->get('black_event.manager.event');
     }

@@ -8,18 +8,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Black\Bundle\EventBundle\Document;
+namespace Black\Bundle\EventBundle\Entity;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
-use Doctrine\ODM\MongoDB\DocumentNotFoundException;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityNotFoundException;
 
-class EventRepository extends DocumentRepository
+class EventRepository extends EntityRepository
 {
     public function getLastEvents($limit = 3)
     {
         $qb = $this->getQueryBuilder()
-                ->sort('startDate', 'desc')
-                ->limit($limit)
+                ->select('e')
+                ->orderBy('startDate', 'DESC')
+                ->setMaxResults($limit)
                 ->getQuery();
 
         return $qb->execute();
@@ -28,7 +29,10 @@ class EventRepository extends DocumentRepository
     public function getEventsForPerson($id)
     {
         $qb = $this->getQueryBuilder()
-                ->field('attendees.$id', new \MongoId($id))
+                ->select('e')
+                ->leftJoin('attendees', 'a')
+                ->where('a.id = :a_id')
+                ->setParameter('a_id', $id)
                 ->getQuery();
 
         return $qb->execute();

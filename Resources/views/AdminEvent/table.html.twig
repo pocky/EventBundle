@@ -1,0 +1,35 @@
+<div id="dyn" class="hiddenpars">
+    {% if documents %}
+    <a class="tOptions" title="{% trans from "views" %}event.admin.table.options.a.title{% endtrans %}"><img src="/bundles/blackadmin/images/icons/options" alt="{% trans from "views" %}admin.admin.table.options.img.alt{% endtrans %}" /></a>
+    {% endif %}
+
+    <table cellpadding="0" cellspacing="0" width="100%" class="tDefault checkAll tMedia {% if documents %}dTable{% endif %}" id="dynamic">
+        <thead>
+            <tr>
+                <td style="width: 30px"><img src="/bundles/blackadmin/images/elements/other/tableArrows.png" alt="" /></td>
+                {% for document in documents %}
+                    {% if loop.first %}
+                    {% for key, value in document %}
+                        {% if 'id' != key %}
+                            <td class="sortCol"><div>{{ key|trans({}, "form") }}<span></span></div></td>
+                        {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                <td style="width: 100px">{% trans from "views" %}admin.admin.table.options.text{% endtrans %}</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for document in documents %}
+                {% include 'BlackEventBundle:AdminEvent:row.html.twig' with {'document': document} %}
+            {% else %}
+            <tr class="{% if loop.index is odd %}odd{% else %}even{% endif %}">
+                <td colspan="3">{% trans from "views" %}event.admin.table.record.empty.text{% endtrans %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        {% include 'BlackEventBundle:AdminEvent:tfoot.html.twig' %}
+    </table>
+</div>

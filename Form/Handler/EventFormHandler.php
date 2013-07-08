@@ -33,16 +33,21 @@ class EventFormHandler
         $this->form->setData($event);
 
         if ('POST' === $this->request->getMethod()) {
-
+            $this->form->getData()->cleanSubEvents();
             $this->form->bind($this->request);
 
             if ($this->form->isValid()) {
-
-                $this->setFlash('success', $event->getName() . ' was successfully updated!');
+                
+                if ($this->form->getData()->getSubEvents() !== null) {
+                    foreach ($this->form->getData()->getSubEvents() as $sub) {
+                        $this->form->getData()->addSubEvent($sub);
+                    }
+                }
+                $this->setFlash('success', 'success.event.admin.event.edit');
 
                 return true;
             } else {
-                $this->setFlash('failure', 'The form is not valid');
+                $this->setFlash('error', 'error.event.admin.event.edit.not.valid');
             }
         }
     }
