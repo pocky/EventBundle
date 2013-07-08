@@ -15,10 +15,10 @@
         {% endif %}
 
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path(admin_edit, { 'id': document.id }) }}" class="tablectrl_small bGreen tipS" title="{% trans from "views" %}event.admin.row.edit.title{% endtrans %}">
+            <a href="{{ path(admin_edit, { 'id': document.id }) }}" class="tablectrl_small bGreen tipS" title="{% trans from "views" %}admin.admin.row.edit.title{% endtrans %}">
                 <span class="iconb" data-icon="&#xe1db;"></span>
             </a>
-            <a href="{{ path(admin_delete, { 'id': document.id, 'token': csrf.generateCsrfToken('delete' ~ document.id) }) }}" class="tablectrl_small bRed tipS" title="{% trans from "views" %}event.admin.row.delete.title{% endtrans %}">
+            <a href="{{ path(admin_delete, { 'id': document.id, 'token': csrf.generateCsrfToken('delete' ~ document.id) }) }}" class="tablectrl_small bRed tipS" title="{% trans from "views" %}admin.admin.row.delete.title{% endtrans %}">
                 <span class="iconb" data-icon="&#xe136;"></span>
             </a>
         {% endif %}

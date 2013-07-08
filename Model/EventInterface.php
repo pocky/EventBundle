@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Black\Bundle\EventBundle\Model;
 
 interface EventInterface
@@ -51,5 +52,4 @@ interface EventInterface
      * @return mixed
      */
     public function getSuperEvent();
-
 }

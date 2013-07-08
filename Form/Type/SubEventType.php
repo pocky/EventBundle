@@ -21,16 +21,17 @@ class SubEventType extends EventType
         $builder
             ->remove('subEvents')
             ->remove('superEvent')
-            ->remove('attendees')
-        ;
+            ->remove('attendees');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => $this->class,
-            'intention'     => 'subEvent_form'
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => $this->class,
+                'intention'     => 'subEvent_form'
+            )
+        );
     }
 
     public function getName()
