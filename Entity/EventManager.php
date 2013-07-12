@@ -10,7 +10,7 @@
  */
 namespace Black\Bundle\EventBundle\Entity;
 
-use Black\Bundle\EngineBundle\Entity\BaseManager;
+use Black\Bundle\EventBundle\Entity\BaseManager;
 
 class EventManager extends BaseManager
 {
