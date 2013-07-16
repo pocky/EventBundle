@@ -17,6 +17,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Black\Bundle\EngineBundle\Form\Type\PostalAddressType;
 use Black\Bundle\EngineBundle\Model\PersonInterface;
 
+/**
+ * EventType
+ */
 class EventType extends AbstractType
 {
 
@@ -36,7 +39,10 @@ class EventType extends AbstractType
     protected $person;
 
     /**
-     * @param string $class The Person class name
+     * @param type                                                   $dbDriver
+     * @param type                                                   $class
+     * @param \Black\Bundle\EngineBundle\Form\Type\PostalAddressType $postal
+     * @param \Black\Bundle\EngineBundle\Model\PersonInterface       $person
      */
     public function __construct($dbDriver, $class, PostalAddressType $postal, PersonInterface $person)
     {
@@ -46,6 +52,10 @@ class EventType extends AbstractType
         $this->person = $person;
     }
 
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array                                        $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -149,7 +159,7 @@ class EventType extends AbstractType
                     )
                     ->add(
                         'attendees',
-                        'document',
+                        'document_double_box',
                         array(
                             'class'         => get_class($this->person),
                             'property'      => 'name',
@@ -174,7 +184,7 @@ class EventType extends AbstractType
                     )
                     ->add(
                         'attendees',
-                        'entity',
+                        'entity_double_box',
                         array(
                             'class'         => get_class($this->person),
                             'property'      => 'name',
@@ -187,6 +197,9 @@ class EventType extends AbstractType
         }
     }
 
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
@@ -197,6 +210,9 @@ class EventType extends AbstractType
         );
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'black_event_event';
