@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('black_event');
 
-        $supportedDrivers = array('mongodb', 'mysql');
+        $supportedDrivers = array('mongodb', 'orm');
 
         $rootNode
             ->children()
@@ -39,10 +39,11 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->validate()
                     ->ifNotInArray($supportedDrivers)
-                        ->thenInvalid('The database driver must be either \'mongodb\', \'mysql\'.')
+                        ->thenInvalid('The database driver must be either \'mongodb\', \'orm\'.')
                     ->end()
                 ->end()
                 ->scalarNode('event_class')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('event_manager')->defaultValue('Black\\Bundle\\EventBundle\\Doctrine\\EventManager')->end()
             ->end();
 
         $this->addEventSection($rootNode);
