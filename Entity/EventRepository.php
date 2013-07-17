@@ -11,10 +11,17 @@
 namespace Black\Bundle\EventBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\EntityNotFoundException;
 
+/**
+ * EventRepository
+ */
 class EventRepository extends EntityRepository
 {
+    /**
+     * @param integer $limit
+     * 
+     * @return array
+     */
     public function getLastEvents($limit = 3)
     {
         $qb = $this->getQueryBuilder()
@@ -25,7 +32,12 @@ class EventRepository extends EntityRepository
 
         return $qb->execute();
     }
-    
+
+    /**
+     * @param integer $id
+     * 
+     * @return array
+     */
     public function getEventsForPerson($id)
     {
         $qb = $this->getQueryBuilder()
@@ -38,8 +50,8 @@ class EventRepository extends EntityRepository
         return $qb->execute();
     }
 
-    private function getQueryBuilder()
+    protected function getQueryBuilder($alias = 'e')
     {
-        return $this->createQueryBuilder();
+        return $this->createQueryBuilder($alias);
     }
 }

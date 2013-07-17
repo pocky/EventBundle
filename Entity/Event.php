@@ -10,32 +10,20 @@
  */
 namespace Black\Bundle\EventBundle\Entity;
 
-use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
-use Black\Bundle\EngineBundle\Traits\ThingEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+
+use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
+use Black\Bundle\EngineBundle\Traits\ThingEntityTrait;
 
 /**
  * Event Entity
- *
- * @ORM\Table(name="event")
- * @ORM\Entity(repositoryClass="Black\Bundle\EventBundle\Entity\EventRepository")
  */
 class Event extends AbstractEvent
 {
     use ThingEntityTrait;
 
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-    
     /**
      * @ORM\Column(name="duration", type="string", nullable=true)
      * @Assert\Type(type="string")
@@ -78,7 +66,7 @@ class Event extends AbstractEvent
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
     protected $startDate;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Event", mappedBy="superEvent", cascade={"persist", "remove"})
      */
@@ -89,7 +77,10 @@ class Event extends AbstractEvent
      * @ORM\JoinColumn(name="super_event_id", referencedColumnName="id", nullable=true)
      */
     protected $superEvent;
-    
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
@@ -97,7 +88,7 @@ class Event extends AbstractEvent
         $this->subEvents = new \Doctrine\Common\Collections\ArrayCollection();
         $this->attendees = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * @ORM\PreRemove
      */
