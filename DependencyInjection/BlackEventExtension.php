@@ -15,6 +15,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
+/**
+ * BlackEventExtension
+ */
 class BlackEventExtension extends Extension
 {
     /**
@@ -45,7 +48,8 @@ class BlackEventExtension extends Extension
             array(
                 ''  => array(
                     'db_driver'      => 'black_event.db_driver',
-                    'event_class'    => 'black_event.model.event.class'
+                    'event_class'    => 'black_event.model.event.class',
+                    'event_manager'  => 'black_event.event.manager'
                 )
             )
         );
@@ -99,6 +103,9 @@ class BlackEventExtension extends Extension
         }
     }
 
+    /**
+     * @return string
+     */
     public function getAlias()
     {
         return 'black_event';
