@@ -12,7 +12,7 @@
 namespace Black\Bundle\EventBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -36,37 +36,62 @@ class AdminEventController extends Controller
      * @Route("/index.html", name="admin_events")
      * @Secure(roles="ROLE_ADMIN")
      * @Template()
+     * 
+     * @return Template
      */
     public function indexAction()
     {
-        $manager    = $this->getManager();
-        $repository = $manager->getRepository();
-        $rawDocuments  = $repository->findAll();
-
         $csrf       = $this->container->get('form.csrf_provider');
 
-        $documents = array();
-
-        foreach ($rawDocuments as $document) {
-            $documents[] = array(
-                'id'                        => $document->getId(),
-                'event.admin.event.name.text'     => $document->getName()
-            );
-        }
+        $keys = array(
+            'id',
+            'event.admin.event.name.text'
+        );
 
         return array(
-            'documents' => $documents,
+            'keys'      => $keys,
             'csrf'      => $csrf
         );
     }
 
     /**
-     * Show lists of Events
+     * Show lists of Persons
      *
+     * @Method("GET")
+     * @Route("/list.json", name="admin_events_json")
+     * @Secure(roles="ROLE_ADMIN")
+     * 
+     * @return Response
+     */
+    public function ajaxListAction()
+    {
+        $manager       = $this->getManager();
+        $repository    = $manager->getRepository();
+        $rawDocuments  = $repository->findAll();
+
+        $documents = array();
+        foreach ($rawDocuments as $document) {
+            $documents['aaData'][] = array(
+                $document->getId(),
+                $document->getName(),
+                null
+            );
+        }
+
+        return new Response(json_encode($documents));
+    }
+
+    /**
+     * Show lists of Events
+     * 
+     * @param integer $id
+     * 
      * @Method("GET")
      * @Route("/{id}/show.html", name="admin_event_show")
      * @Secure(roles="ROLE_USER")
      * @Template()
+     * 
+     * @return Temlate
      */
     public function showAction($id)
     {
@@ -82,14 +107,14 @@ class AdminEventController extends Controller
         $csrf   = $this->container->get('form.csrf_provider');
 
         $attendees = array();
-        
+
         foreach ($document->getAttendees() as $attendee) {
             if ($attendee->getAddress()->first() != null) {
                 $country = $attendee->getAddress()->first()->getAddressCountryLocale($this->getRequest()->getLocale());
             } else {
                 $country = false;
             }
-            
+
             $attendees[] = array(
                 'id'                                                => $attendee->getId(),
                 'engine.admin.person.name.given.text'               => $attendee->getGivenName(),
@@ -98,7 +123,7 @@ class AdminEventController extends Controller
                 'engine.admin.postalAddress.address.country.text'   => $country
             );
         }
-        
+
         return array(
             'document'  => $document,
             'attendees' => $attendees,
@@ -113,6 +138,8 @@ class AdminEventController extends Controller
      * @Route("/new", name="admin_event_new")
      * @Secure(roles="ROLE_ADMIN")
      * @Template()
+     * 
+     * @return Template
      */
     public function newAction()
     {
@@ -138,12 +165,12 @@ class AdminEventController extends Controller
     /**
      * Displays a form to edit an existing Event document.
      *
+     * @param string $id The document ID
+     *
      * @Method({"GET", "POST"})
      * @Route("/{id}/edit", name="admin_event_edit")
      * @Secure(roles="ROLE_ADMIN")
      * @Template()
-     *
-     * @param string $id The document ID
      *
      * @return array
      *
@@ -180,11 +207,13 @@ class AdminEventController extends Controller
 
     /**
      * Deletes an Event document.
-     *
+     * 
+     * @param string $id
+     * @param string $token
+     * 
      * @Method({"POST", "GET"})
      * @Route("/{id}/delete/{token}", name="admin_event_delete")
      * @Secure(roles="ROLE_ADMIN")
-     * @param string $id The document ID
      *
      * @return array
      *
@@ -198,15 +227,15 @@ class AdminEventController extends Controller
         $form->bind($request);
 
         if (null !== $token) {
-            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete' . $id, $token);
+            $token = $this->get('form.csrf_provider')->isCsrfTokenValid('delete', $token);
         }
-        
+
         if ($form->isValid() || true === $token) {
 
             $dm         = $this->getManager();
             $repository = $dm->getRepository();
             $document   = $repository->findOneById($id);
-            
+
             if (!$document) {
                 throw $this->createNotFoundException('Unable to find Event document.');
             }
@@ -224,18 +253,17 @@ class AdminEventController extends Controller
     }
 
     /**
-     * Delete an Attendee from document.
-     *
-     * @Method({"GET"})
-     * @Route("/{event}/delete/attendee/{person}", name="admin_event_attendee_delete")
-     * @Secure(roles="ROLE_USER")
-     *
-     * @ParamConverter("person", class="ActivCompany\Bundle\ERPBundle\Document\Person")
-     * @ParamConverter("event", class="ActivCompany\Bundle\ERPBundle\Document\Event")
-     *
+     * Delete an Attendee from document
+     *7
      * @param PersonInterface $person
      * @param EventInterface  $event
      * @param null            $token
+     *
+     * @ParamConverter("person", class="ActivCompany\Bundle\ERPBundle\Document\Person")
+     * @ParamConverter("event", class="ActivCompany\Bundle\ERPBundle\Document\Event")
+     * @Method({"GET"})
+     * @Route("/{event}/delete/attendee/{person}", name="admin_event_attendee_delete")
+     * @Secure(roles="ROLE_USER")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If document doesn't exists
@@ -282,11 +310,13 @@ class AdminEventController extends Controller
 
         if (!$ids = $request->get('ids')) {
             $this->get('session')->getFlashBag()->add('error', 'error.event.admin.batch.no.item');
+
             return $this->redirect($this->generateUrl('admin_events'));
         }
 
         if (!$action = $request->get('batchAction')) {
             $this->get('session')->getFlashBag()->add('error', 'error.event.admin.batch.no.action');
+
             return $this->redirect($this->generateUrl('admin_events'));
         }
 
