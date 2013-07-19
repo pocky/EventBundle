@@ -55,7 +55,7 @@ class AdminEventController extends Controller
     }
 
     /**
-     * Show lists of Persons
+     * Show lists of Events
      *
      * @Method("GET")
      * @Route("/list.json", name="admin_events_json")
@@ -69,7 +69,7 @@ class AdminEventController extends Controller
         $repository    = $manager->getRepository();
         $rawDocuments  = $repository->findAll();
 
-        $documents = array();
+        $documents = array('aaData' => array());
         foreach ($rawDocuments as $document) {
             $documents['aaData'][] = array(
                 $document->getId(),
