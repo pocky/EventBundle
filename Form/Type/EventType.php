@@ -128,12 +128,7 @@ class EventType extends AbstractType
                     'subEvents',
                     'collection',
                     array(
-                        'type'          => new SubEventType(
-                            $this->dbDriver,
-                            $this->class,
-                            $this->postalType,
-                            $this->person
-                        ),
+                        'type'          => 'black_event_sub_event',
                         'label'         => 'event.admin.event.subEvent.text',
                         'allow_add'     => true,
                         'allow_delete'  => true,

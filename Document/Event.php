@@ -18,6 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Black\Bundle\EngineBundle\Model\PersonInterface;
 
 /**
+ * Event
+ * 
  * @ODM\MappedSuperClass()
  */
 class Event extends AbstractEvent
