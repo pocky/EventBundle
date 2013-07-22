@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addEventSection($rootNode);
+        $this->addSubEventSection($rootNode);
 
         return $treeBuilder;
     }
@@ -68,6 +69,28 @@ class Configuration implements ConfigurationInterface
                                 )->end()
                                 ->scalarNode('handler')->defaultValue(
                                     'Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler'
+                                )->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    private function addSubEventSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('subevent')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('form')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('name')->defaultValue('black_event_sub_event')->end()
+                                ->scalarNode('type')->defaultValue(
+                                    'Black\\Bundle\\EventBundle\\Form\\Type\\SubEventType'
                                 )->end()
                             ->end()
                         ->end()
