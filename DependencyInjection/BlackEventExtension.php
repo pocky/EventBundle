@@ -49,6 +49,7 @@ class BlackEventExtension extends Extension
                 ''  => array(
                     'db_driver'      => 'black_event.db_driver',
                     'event_class'    => 'black_event.model.event.class',
+                    'subevent_class' => 'black_event.model.subevent.class',
                     'event_manager'  => 'black_event.event.manager'
                 )
             )
@@ -56,6 +57,10 @@ class BlackEventExtension extends Extension
 
         if (!empty($config['event'])) {
             $this->loadEvent($config['event'], $container, $loader);
+        }
+
+        if (!empty($config['subevent'])) {
+            $this->loadSubEvent($config['subevent'], $container, $loader);
         }
     }
 
@@ -68,6 +73,19 @@ class BlackEventExtension extends Extension
             $container,
             array(
                 'form' => 'black_event.event.form.%s',
+            )
+        );
+    }
+
+    private function loadSubEvent(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
+        $loader->load('sub_event.xml');
+
+        $this->remapParametersNamespaces(
+            $config,
+            $container,
+            array(
+                'form' => 'black_event.subevent.form.%s',
             )
         );
     }

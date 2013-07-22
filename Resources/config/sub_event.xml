@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="black_event.subevent.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form" scope="request">
+            <argument>%black_event.subevent.form.name%</argument>
+            <argument type="service" id="black_event.subevent.form.type" />
+            <argument>null</argument>
+        </service>
+        
+        <service id="black_event.subevent.form.type" class="%black_event.subevent.form.type%" scope="request">
+            <argument>%black_event.db_driver%</argument>
+            <argument>%black_event.model.event.class%</argument>
+            <argument type="service" id="black_engine.postaladdress.form.type" />
+            <argument type="service" id="black_engine.person.model.class" />
+            <tag name="form.type" alias="black_event_sub_event" />
+        </service>
+    </services>
+</container>

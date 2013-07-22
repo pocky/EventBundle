@@ -13,8 +13,15 @@ namespace Black\Bundle\EventBundle\Form\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * SubEventType
+ */
 class SubEventType extends EventType
 {
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface  $builder
+     * @param array                                         $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -24,6 +31,9 @@ class SubEventType extends EventType
             ->remove('attendees');
     }
 
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
@@ -34,8 +44,11 @@ class SubEventType extends EventType
         );
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return 'black_event_subEvent';
+        return 'black_event_sub_event';
     }
 }
