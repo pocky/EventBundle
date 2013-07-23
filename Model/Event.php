@@ -12,7 +12,7 @@ namespace Black\Bundle\EventBundle\Model;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
 use Doctrine\Common\Collections\ArrayCollection;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\PersonBundle\Model\PersonInterface;
 
 /**
  * @MappedSuperClass

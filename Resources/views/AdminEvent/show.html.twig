@@ -62,7 +62,7 @@
                     <div class="clear"></div>
                 </div>
 
-                {% include 'BlackEngineBundle:AdminPerson:table.html.twig' with {'documents': attendees, 'csrf': csrf} %}
+                {% include 'BlackEventBundle:AdminEvent:personTable.html.twig' with {'documents': attendees, 'csrf': csrf} %}
             </div>
         </div>
     </form>

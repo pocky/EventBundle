@@ -6,8 +6,6 @@
  */
 namespace Black\Bundle\EventBundle\Model;
 
-use Black\Bundle\EngineBundle\Model\ManagerInterface;
-
 /**
  *
  * @author dallas62

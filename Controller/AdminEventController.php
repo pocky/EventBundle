@@ -19,7 +19,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\PersonBundle\Model\PersonInterface;
 use Black\Bundle\EventBundle\Model\EventInterface;
 
 /**
@@ -117,10 +117,10 @@ class AdminEventController extends Controller
 
             $attendees[] = array(
                 'id'                                                => $attendee->getId(),
-                'engine.admin.person.name.given.text'               => $attendee->getGivenName(),
-                'engine.admin.person.name.family.text'              => $attendee->getFamilyName(),
-                'engine.admin.person.email.text'                    => $attendee->getEmail(),
-                'engine.admin.postalAddress.address.country.text'   => $country
+                'person.admin.person.name.given.text'               => $attendee->getGivenName(),
+                'person.admin.person.name.family.text'              => $attendee->getFamilyName(),
+                'person.admin.person.email.text'                    => $attendee->getEmail(),
+                'person.admin.postalAddress.address.country.text'   => $country
             );
         }
 
@@ -366,6 +366,6 @@ class AdminEventController extends Controller
 
     protected function getPersonManager()
     {
-        return $this->get('black_engine.manager.person');
+        return $this->get('black_person.manager.person');
     }
 }

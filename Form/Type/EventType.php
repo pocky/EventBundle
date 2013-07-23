@@ -14,8 +14,8 @@ namespace Black\Bundle\EventBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Black\Bundle\EngineBundle\Form\Type\PostalAddressType;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\CommonBundle\Form\Type\PostalAddressType;
+use Black\Bundle\PersonBundle\Model\PersonInterface;
 
 /**
  * EventType
@@ -41,8 +41,8 @@ class EventType extends AbstractType
     /**
      * @param type                                                   $dbDriver
      * @param type                                                   $class
-     * @param \Black\Bundle\EngineBundle\Form\Type\PostalAddressType $postal
-     * @param \Black\Bundle\EngineBundle\Model\PersonInterface       $person
+     * @param \Black\Bundle\PersonBundle\Form\Type\PostalAddressType $postal
+     * @param \Black\Bundle\PersonBundle\Model\PersonInterface       $person
      */
     public function __construct($dbDriver, $class, PostalAddressType $postal, PersonInterface $person)
     {

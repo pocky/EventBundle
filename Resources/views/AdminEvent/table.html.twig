@@ -26,7 +26,7 @@
             {% set env_path = '' %}
         {% endif %}
         function admin_show(id) {
-            return "<a href=\"{{ env_path }}/admin/event/"+id+"/show\" class=\"tablectrl_small bBlue tipS\" title=\"{% trans from "views" %}admin.admin.row.show.title{% endtrans %}\">\
+            return "<a href=\"{{ env_path }}/admin/event/"+id+"/show.html\" class=\"tablectrl_small bBlue tipS\" title=\"{% trans from "views" %}admin.admin.row.show.title{% endtrans %}\">\
                 &nbsp;<span class=\"iconb\" data-icon=\"\">&nbsp;</span>\
             </a>";
         }

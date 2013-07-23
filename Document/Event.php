@@ -11,11 +11,11 @@
 namespace Black\Bundle\EventBundle\Document;
 
 use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
-use Black\Bundle\EngineBundle\Traits\ThingDocumentTrait;
+use Black\Bundle\CommonBundle\Traits\ThingDocumentTrait;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\PersonBundle\Model\PersonInterface;
 
 /**
  * Event
@@ -38,7 +38,7 @@ class Event extends AbstractEvent
     protected $endDate;
 
     /**
-     * @ODM\EmbedOne(targetDocument="Black\Bundle\EngineBundle\Document\PostalAddress")
+     * @ODM\EmbedOne(targetDocument="Black\Bundle\PersonBundle\Document\PostalAddress")
      */
     protected $location;
 

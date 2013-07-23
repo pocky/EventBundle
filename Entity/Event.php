@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
-use Black\Bundle\EngineBundle\Traits\ThingEntityTrait;
+use Black\Bundle\CommonBundle\Traits\ThingEntityTrait;
 
 /**
  * Event Entity
@@ -36,7 +36,7 @@ class Event extends AbstractEvent
     protected $endDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Black\Bundle\EngineBundle\Entity\Person", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="Black\Bundle\PersonBundle\Entity\Person", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="event_attendees",
      *      joinColumns={@ORM\JoinColumn(name="event_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="person_id", referencedColumnName="id")}
@@ -45,7 +45,7 @@ class Event extends AbstractEvent
     protected $attendees;
 
     /**
-     * @ORM\OneToOne(targetEntity="Black\Bundle\EngineBundle\Entity\PostalAddress", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Black\Bundle\CommonBundle\Entity\PostalAddress", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="postal_address_id", referencedColumnName="id")
      */
     protected $location;
