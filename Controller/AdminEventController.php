@@ -1,9 +1,9 @@
 <?php
 
 /*
- * This file is part of the FOSUserBundle package.
+ * This file is part of the Black package.
  *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ * (c) Alexandre Balmes <albalmes@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -19,11 +19,15 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\PersonBundle\Model\PersonInterface;
 use Black\Bundle\EventBundle\Model\EventInterface;
 
 /**
  * Controller managing the event profile
+ *
+ * @package Black\Bundle\EventBundle\Controller
+ * @author  Alexandre Balmes <albalmes@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php MIT
  *
  * @Route("/admin/event")
  */
@@ -91,7 +95,8 @@ class AdminEventController extends Controller
      * @Secure(roles="ROLE_USER")
      * @Template()
      * 
-     * @return Temlate
+     * @return array
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function showAction($id)
     {
@@ -117,10 +122,10 @@ class AdminEventController extends Controller
 
             $attendees[] = array(
                 'id'                                                => $attendee->getId(),
-                'engine.admin.person.name.given.text'               => $attendee->getGivenName(),
-                'engine.admin.person.name.family.text'              => $attendee->getFamilyName(),
-                'engine.admin.person.email.text'                    => $attendee->getEmail(),
-                'engine.admin.postalAddress.address.country.text'   => $country
+                'person.admin.person.name.given.text'               => $attendee->getGivenName(),
+                'person.admin.person.name.family.text'              => $attendee->getFamilyName(),
+                'person.admin.person.email.text'                    => $attendee->getEmail(),
+                'person.admin.postalAddress.address.country.text'   => $country
             );
         }
 
@@ -340,16 +345,11 @@ class AdminEventController extends Controller
 
     }
 
-    private function createDeleteAttendeeForm($user, $event)
-    {
-        $form = $this->createFormBuilder(array('user' => $user, 'event' => $event))
-            ->add('user', 'hidden')
-            ->add('event', 'hidden')
-            ->getForm();
-
-        return $form;
-    }
-
+    /**
+     * @param $id
+     *
+     * @return \Symfony\Component\Form\Form
+     */
     private function createDeleteForm($id)
     {
         $form = $this->createFormBuilder(array('id' => $id))
@@ -359,13 +359,19 @@ class AdminEventController extends Controller
         return $form;
     }
 
+    /**
+     * @return object
+     */
     protected function getManager()
     {
         return $this->get('black_event.manager.event');
     }
 
+    /**
+     * @return object
+     */
     protected function getPersonManager()
     {
-        return $this->get('black_engine.manager.person');
+        return $this->get('black_person.manager.person');
     }
 }

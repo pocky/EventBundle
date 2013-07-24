@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Blackengine package.
+ * This file is part of the Black package.
  *
  * (c) Alexandre Balmes <albalmes@gmail.com>
  *
@@ -14,11 +14,15 @@ namespace Black\Bundle\EventBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Black\Bundle\EngineBundle\Form\Type\PostalAddressType;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
+use Black\Bundle\CommonBundle\Form\Type\PostalAddressType;
+use Black\Bundle\PersonBundle\Model\PersonInterface;
 
 /**
- * EventType
+ * Class EventType
+ *
+ * @package Black\Bundle\EventBundle\Form\Type
+ * @author  Alexandre Balmes <albalmes@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php MIT
  */
 class EventType extends AbstractType
 {
@@ -31,24 +35,17 @@ class EventType extends AbstractType
     /**
      * @var
      */
-    protected $postalType;
-
-    /**
-     * @var
-     */
     protected $person;
 
     /**
-     * @param type                                                   $dbDriver
-     * @param type                                                   $class
-     * @param \Black\Bundle\EngineBundle\Form\Type\PostalAddressType $postal
-     * @param \Black\Bundle\EngineBundle\Model\PersonInterface       $person
+     * @param type                                               $dbDriver
+     * @param type                                               $class
+     * @param \Black\Bundle\PersonBundle\Model\PersonInterface   $person
      */
-    public function __construct($dbDriver, $class, PostalAddressType $postal, PersonInterface $person)
+    public function __construct($dbDriver, $class, PersonInterface $person)
     {
         $this->dbDriver = $dbDriver;
         $this->class = $class;
-        $this->postalType = $postal;
         $this->person = $person;
     }
 
@@ -117,7 +114,7 @@ class EventType extends AbstractType
                 )
                 ->add(
                     'location',
-                    $this->postalType,
+                    'black_event_postaladdress',
                     array(
                         'label'                 => 'event.admin.event.location.text',
                         'cascade_validation'    => true,

@@ -1,26 +1,28 @@
 <?php
 
 /*
- * This file is part of the Blackengine package.
+ * This file is part of the Black package.
  *
  * (c) Alexandre Balmes <albalmes@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Black\Bundle\EventBundle\Document;
 
 use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
-use Black\Bundle\EngineBundle\Traits\ThingDocumentTrait;
+use Black\Bundle\CommonBundle\Traits\ThingDocumentTrait;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Black\Bundle\EngineBundle\Model\PersonInterface;
 
 /**
- * Event
- * 
- * @ODM\MappedSuperClass()
+ * Class Event
+ *
+ * @package Black\Bundle\EventBundle\Document
+ * @author  Alexandre Balmes <albalmes@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php MIT
  */
 class Event extends AbstractEvent
 {
@@ -38,7 +40,7 @@ class Event extends AbstractEvent
     protected $endDate;
 
     /**
-     * @ODM\EmbedOne(targetDocument="Black\Bundle\EngineBundle\Document\PostalAddress")
+     * @ODM\EmbedOne(targetDocument="PostalAddress")
      */
     protected $location;
 
@@ -68,7 +70,7 @@ class Event extends AbstractEvent
      * @ODM\ReferenceOne(targetDocument="Event", cascade={"all"})
      */
     protected $superEvent;
-    
+
     /**
      * @ODM\PreRemove
      */

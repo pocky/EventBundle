@@ -1,13 +1,14 @@
 <?php
 
 /*
- * This file is part of the Blackengine package.
+ * This file is part of the Black package.
  *
  * (c) Alexandre Balmes <albalmes@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Black\Bundle\EventBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -15,10 +16,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
-use Black\Bundle\EngineBundle\Traits\ThingEntityTrait;
+use Black\Bundle\CommonBundle\Traits\ThingEntityTrait;
 
 /**
- * Event Entity
+ * Class Event
+ *
+ * @package Black\Bundle\EventBundle\Entity
+ * @author  Alexandre Balmes <albalmes@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php MIT
  */
 class Event extends AbstractEvent
 {
@@ -36,7 +41,7 @@ class Event extends AbstractEvent
     protected $endDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Black\Bundle\EngineBundle\Entity\Person", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity="Black\Bundle\PersonBundle\Entity\Person", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="event_attendees",
      *      joinColumns={@ORM\JoinColumn(name="event_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="person_id", referencedColumnName="id")}
@@ -45,7 +50,7 @@ class Event extends AbstractEvent
     protected $attendees;
 
     /**
-     * @ORM\OneToOne(targetEntity="Black\Bundle\EngineBundle\Entity\PostalAddress", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="PostalAddress", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="postal_address_id", referencedColumnName="id")
      */
     protected $location;
