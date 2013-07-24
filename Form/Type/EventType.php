@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Blackengine package.
+ * This file is part of the Black package.
  *
  * (c) Alexandre Balmes <albalmes@gmail.com>
  *
@@ -18,7 +18,11 @@ use Black\Bundle\CommonBundle\Form\Type\PostalAddressType;
 use Black\Bundle\PersonBundle\Model\PersonInterface;
 
 /**
- * EventType
+ * Class EventType
+ *
+ * @package Black\Bundle\EventBundle\Form\Type
+ * @author  Alexandre Balmes <albalmes@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php MIT
  */
 class EventType extends AbstractType
 {

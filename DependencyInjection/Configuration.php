@@ -1,13 +1,14 @@
 <?php
 
 /*
- * This file is part of the Blackengine package.
+ * This file is part of the Black package.
  *
  * (c) Alexandre Balmes <albalmes@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Black\Bundle\EventBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -15,10 +16,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
 /**
- * This is the class that validates and merges configuration from your app/config files
+ * Class Configuration
  *
- * To learn more see 
- * {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * @package Black\Bundle\EventBundle\DependencyInjection
+ * @author  Alexandre Balmes <albalmes@gmail.com>
+ * @license http://opensource.org/licenses/mit-license.php MIT
  */
 class Configuration implements ConfigurationInterface
 {
@@ -52,6 +54,9 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    /**
+     * @param ArrayNodeDefinition $node
+     */
     private function addEventSection(ArrayNodeDefinition $node)
     {
         $node
@@ -77,6 +82,9 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
+    /**
+     * @param ArrayNodeDefinition $node
+     */
     private function addSubEventSection(ArrayNodeDefinition $node)
     {
         $node
