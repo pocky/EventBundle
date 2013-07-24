@@ -35,24 +35,17 @@ class EventType extends AbstractType
     /**
      * @var
      */
-    protected $postalType;
-
-    /**
-     * @var
-     */
     protected $person;
 
     /**
-     * @param type                                                   $dbDriver
-     * @param type                                                   $class
-     * @param \Black\Bundle\PersonBundle\Form\Type\PostalAddressType $postal
-     * @param \Black\Bundle\PersonBundle\Model\PersonInterface       $person
+     * @param type                                               $dbDriver
+     * @param type                                               $class
+     * @param \Black\Bundle\PersonBundle\Model\PersonInterface   $person
      */
-    public function __construct($dbDriver, $class, PostalAddressType $postal, PersonInterface $person)
+    public function __construct($dbDriver, $class, PersonInterface $person)
     {
         $this->dbDriver = $dbDriver;
         $this->class = $class;
-        $this->postalType = $postal;
         $this->person = $person;
     }
 
@@ -121,7 +114,7 @@ class EventType extends AbstractType
                 )
                 ->add(
                     'location',
-                    $this->postalType,
+                    'black_event_postaladdress',
                     array(
                         'label'                 => 'event.admin.event.location.text',
                         'cascade_validation'    => true,

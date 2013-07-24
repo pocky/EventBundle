@@ -52,10 +52,11 @@ class BlackEventExtension extends Extension
             $container,
             array(
                 ''  => array(
-                    'db_driver'      => 'black_event.db_driver',
-                    'event_class'    => 'black_event.model.event.class',
-                    'subevent_class' => 'black_event.model.subevent.class',
-                    'event_manager'  => 'black_event.event.manager'
+                    'db_driver'             => 'black_event.db_driver',
+                    'event_class'           => 'black_event.model.event.class',
+                    'subevent_class'        => 'black_event.model.subevent.class',
+                    'postaladdress_class'   => 'black_event.postaladdress.model.class',
+                    'event_manager'         => 'black_event.event.manager'
                 )
             )
         );
@@ -66,6 +67,10 @@ class BlackEventExtension extends Extension
 
         if (!empty($config['subevent'])) {
             $this->loadSubEvent($config['subevent'], $container, $loader);
+        }
+
+        if (!empty($config['postaladdress'])) {
+            $this->loadPostalAddress($config['postaladdress'], $container, $loader);
         }
     }
 
@@ -101,6 +106,19 @@ class BlackEventExtension extends Extension
             $container,
             array(
                 'form' => 'black_event.subevent.form.%s',
+            )
+        );
+    }
+
+    private function loadPostalAddress(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
+        $loader->load('postalAddress.xml');
+
+        $this->remapParametersNamespaces(
+            $config,
+            $container,
+            array(
+                'form' => 'black_event.postaladdress.form.%s',
             )
         );
     }

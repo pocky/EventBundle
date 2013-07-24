@@ -50,7 +50,7 @@ class Event extends AbstractEvent
     protected $attendees;
 
     /**
-     * @ORM\OneToOne(targetEntity="Black\Bundle\CommonBundle\Entity\PostalAddress", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="PostalAddress", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="postal_address_id", referencedColumnName="id")
      */
     protected $location;

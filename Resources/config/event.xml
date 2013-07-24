@@ -14,7 +14,6 @@
         <service id="black_event.event.form.type" class="%black_event.event.form.type%" scope="request">
             <argument>%black_event.db_driver%</argument>
             <argument>%black_event.model.event.class%</argument>
-            <argument type="service" id="black_person.postaladdress.form.type" />
             <argument type="service" id="black_person.person.model.class" />
             <tag name="form.type" alias="black_event_event" />
         </service>

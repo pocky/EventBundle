@@ -46,10 +46,12 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('event_class')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('event_manager')->defaultValue('Black\\Bundle\\EventBundle\\Doctrine\\EventManager')->end()
+                ->scalarNode('postaladdress_class')->isRequired()->cannotBeEmpty()->end()
             ->end();
 
         $this->addEventSection($rootNode);
         $this->addSubEventSection($rootNode);
+        $this->addPostalAddressSection($rootNode);
 
         return $treeBuilder;
     }
@@ -99,6 +101,30 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('name')->defaultValue('black_event_sub_event')->end()
                                 ->scalarNode('type')->defaultValue(
                                     'Black\\Bundle\\EventBundle\\Form\\Type\\SubEventType'
+                                )->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    private function addPostalAddressSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('postaladdress')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('form')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('type')->defaultValue(
+                                    'Black\\Bundle\\EventBundle\\Form\\Type\\PostalAddressType'
+                                )->end()
+                                ->scalarNode('address_list')->defaultValue(
+                                    'Black\\Bundle\\CommonBundle\\Form\\ChoiceList\\AddressList'
                                 )->end()
                             ->end()
                         ->end()

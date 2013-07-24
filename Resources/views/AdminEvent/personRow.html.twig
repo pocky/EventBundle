@@ -1,0 +1,30 @@
+<tr class="{% if loop.index is odd %}odd{% else %}even{% endif %}">
+    {% for key, value in document %}
+        {% if 'id' == key %}
+            <td><input type="checkbox" name="ids[]" value="{{ value }}" /></td>
+        {% elseif 'person.admin.person.name.family.text' == key %}
+            <td class="textL"><strong>{{ value|upper }}</strong></td>
+        {% elseif 'person.admin.person.name.given.text' == key %}
+            <td class="textL"><strong>{{ value|upper }}</strong></td>
+        {% else %}
+            <td class="textL">{{ value }}</td>
+        {% endif %}
+    {% endfor %}
+
+    <td class="tableActs" align="center">
+        {% if admin_show is defined %}
+            <a href="{{ path(admin_show, { 'id': document.id }) }}" class="tablectrl_small bBlue tipS" title="{% trans from "views" %}person.admin.row.show.title{% endtrans %}">
+                &nbsp;<span class="iconb" data-icon="">&nbsp;</span>
+            </a>
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path(admin_edit, { 'id': document.id }) }}" class="tablectrl_small bGreen tipS" title="{% trans from "views" %}admin.admin.row.edit.title{% endtrans %}">
+                <span class="iconb" data-icon="&#xe1db;"></span>
+            </a>
+            <a href="{{ path(admin_delete, { 'id': document.id, 'token': csrf.generateCsrfToken('delete' ~ document.id) }) }}" class="tablectrl_small bRed tipS" title="{% trans from "views" %}admin.admin.row.delete.title{% endtrans %}">
+                <span class="iconb" data-icon="&#xe136;"></span>
+            </a>
+        {% endif %}
+    </td>
+</tr>
