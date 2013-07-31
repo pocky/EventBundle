@@ -259,13 +259,11 @@ class AdminEventController extends Controller
 
     /**
      * Delete an Attendee from document
-     *7
+     * 
      * @param PersonInterface $person
      * @param EventInterface  $event
      * @param null            $token
      *
-     * @ParamConverter("person", class="ActivCompany\Bundle\ERPBundle\Document\Person")
-     * @ParamConverter("event", class="ActivCompany\Bundle\ERPBundle\Document\Event")
      * @Method({"GET"})
      * @Route("/{event}/delete/attendee/{person}", name="admin_event_attendee_delete")
      * @Secure(roles="ROLE_USER")
@@ -338,7 +336,7 @@ class AdminEventController extends Controller
         }
 
         foreach ($ids as $id) {
-            $this->$method($id, $token);
+            $this->$method($id, $this->get('form.csrf_provider')->generateCsrfToken('delete'));
         }
 
         return $this->redirect($this->generateUrl('admin_events'));

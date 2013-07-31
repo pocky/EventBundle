@@ -31,7 +31,7 @@ class EventRepository extends EntityRepository
     {
         $qb = $this->getQueryBuilder()
                 ->select('e')
-                ->orderBy('startDate', 'DESC')
+                ->orderBy('e.startDate', 'DESC')
                 ->setMaxResults($limit)
                 ->getQuery();
 

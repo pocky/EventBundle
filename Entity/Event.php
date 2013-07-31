@@ -43,8 +43,8 @@ class Event extends AbstractEvent
     /**
      * @ORM\ManyToMany(targetEntity="Black\Bundle\PersonBundle\Entity\Person", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="event_attendees",
-     *      joinColumns={@ORM\JoinColumn(name="event_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="person_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="event_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="person_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
      */
     protected $attendees;
@@ -79,7 +79,7 @@ class Event extends AbstractEvent
 
     /**
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="subEvents", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="super_event_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="super_event_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $superEvent;
 

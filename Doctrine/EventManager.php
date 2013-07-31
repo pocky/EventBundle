@@ -150,6 +150,24 @@ class EventManager implements EventManagerInterface
     }
 
     /**
+     * @return array
+     */
+    public function findEvents()
+    {
+        return $this->getRepository()->findAll();
+    }
+
+    /**
+     * @param integer $limit
+     * 
+     * @return array
+     */
+    public function getLastEvents($limit = 3)
+    {
+        return $this->getRepository()->getLastEvents($limit);
+    }
+
+    /**
      * @param integer $id
      * 
      * @return array
@@ -157,5 +175,13 @@ class EventManager implements EventManagerInterface
     public function findEventsForPerson($id)
     {
         return $this->getRepository()->getEventsForPerson($id);
+    }
+
+    /**
+     * @return integer
+     */
+    public function countAll()
+    {
+        return count($this->getRepository()->findAll());
     }
 }
