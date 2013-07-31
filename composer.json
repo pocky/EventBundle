@@ -17,7 +17,7 @@
         "black/common-bundle": "dev-master"
     },
     "autoload": {
-        "psr-0": { "Black\\EventBundle": "" }
+        "psr-0": { "Black\\Bundle\\EventBundle": "" }
     },
-    "target-dir": "Black/EventBundle"
+    "target-dir": "Black/Bundle/EventBundle"
 }
