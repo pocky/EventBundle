@@ -14,8 +14,6 @@ namespace Black\Bundle\EventBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Black\Bundle\CommonBundle\Form\Type\PostalAddressType;
-use Black\Bundle\PersonBundle\Model\PersonInterface;
 
 /**
  * Class EventType
@@ -33,20 +31,13 @@ class EventType extends AbstractType
     protected $class;
 
     /**
-     * @var
-     */
-    protected $person;
-
-    /**
      * @param type                                               $dbDriver
      * @param type                                               $class
      * @param \Black\Bundle\PersonBundle\Model\PersonInterface   $person
      */
-    public function __construct($dbDriver, $class, PersonInterface $person)
+    public function __construct($class)
     {
-        $this->dbDriver = $dbDriver;
         $this->class = $class;
-        $this->person = $person;
     }
 
     /**
@@ -135,59 +126,27 @@ class EventType extends AbstractType
                             'add'   => 'add-another-event'
                         ),
                     )
+                )
+                ->add(
+                    'attendees',
+                    'black_person_double_box_person',
+                    array(
+                        'label'         => 'event.admin.event.attendees.text',
+                        'multiple'      => true,
+                        'by_reference'  => false,
+                        'required'      => false
+                    )
+                )
+                ->add(
+                    'superEvent',
+                    'black_event_choice_list_event',
+                    array(
+                        'label'         => 'event.admin.event.superEvent.text',
+                        'required'      => false,
+                        'empty_value'   => 'event.admin.event.superEvent.empty'
+                    )
                 );
-        if ($this->dbDriver == 'mongodb') {
-            $builder
-                    ->add(
-                        'superEvent',
-                        'document',
-                        array(
-                           'class'          => $this->class,
-                            'property'      => 'name',
-                            'label'         => 'event.admin.event.superEvent.text',
-                            'required'      => false,
-                            'empty_value'   => 'event.admin.event.superEvent.empty'
-                        )
-                    )
-                    ->add(
-                        'attendees',
-                        'document_double_box',
-                        array(
-                            'class'         => get_class($this->person),
-                            'property'      => 'name',
-                            'multiple'      => true,
-                            'by_reference'  => false,
-                            'label'         => 'event.admin.event.attendees.text',
-                            'required'      => false
-                        )
-                    );
-        } else {
-            $builder
-                    ->add(
-                        'superEvent',
-                        'entity',
-                        array(
-                            'class'       => $this->class,
-                            'property'    => 'name',
-                            'label'       => 'event.admin.event.superEvent.text',
-                            'required'    => false,
-                            'empty_value' => 'event.admin.event.superEvent.empty'
-                        )
-                    )
-                    ->add(
-                        'attendees',
-                        'entity_double_box',
-                        array(
-                            'class'         => get_class($this->person),
-                            'property'      => 'name',
-                            'multiple'      => true,
-                            'by_reference'  => false,
-                            'label'         => 'event.admin.event.attendees.text',
-                            'required'      => false
-                        )
-                    );
-        }
-    }
+}
 
     /**
      * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver

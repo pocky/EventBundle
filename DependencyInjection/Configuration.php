@@ -74,6 +74,9 @@ class Configuration implements ConfigurationInterface
                                 ->scalarNode('type')->defaultValue(
                                     'Black\\Bundle\\EventBundle\\Form\\Type\\EventType'
                                 )->end()
+                                ->scalarNode('event_list')->defaultValue(
+                                    'Black\\Bundle\\EventBundle\\Form\\ChoiceList\\EventList'
+                                )->end()
                                 ->scalarNode('handler')->defaultValue(
                                     'Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler'
                                 )->end()
