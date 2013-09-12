@@ -14,6 +14,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
+        "black/person-bundle": "@dev",
         "black/common-bundle": "@dev"
     },
     "autoload": {
