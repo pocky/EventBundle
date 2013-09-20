@@ -45,13 +45,16 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('event_class')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('event_manager')->defaultValue('Black\\Bundle\\EventBundle\\Doctrine\\EventManager')->end()
+                ->scalarNode('invitation_class')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('postaladdress_class')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('event_manager')->defaultValue('Black\\Bundle\\EventBundle\\Doctrine\\EventManager')->end()
+                ->scalarNode('invitation_manager')->defaultValue('Black\\Bundle\\EventBundle\\Doctrine\\InvitationManager')->end()
             ->end();
 
         $this->addEventSection($rootNode);
         $this->addSubEventSection($rootNode);
         $this->addPostalAddressSection($rootNode);
+        $this->addInvitationSection($rootNode);
 
         return $treeBuilder;
     }
@@ -71,15 +74,11 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('name')->defaultValue('black_event_event')->end()
-                                ->scalarNode('type')->defaultValue(
-                                    'Black\\Bundle\\EventBundle\\Form\\Type\\EventType'
-                                )->end()
-                                ->scalarNode('event_list')->defaultValue(
-                                    'Black\\Bundle\\EventBundle\\Form\\ChoiceList\\EventList'
-                                )->end()
-                                ->scalarNode('handler')->defaultValue(
-                                    'Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler'
-                                )->end()
+                                ->scalarNode('type')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Type\\EventType')->end()
+                                ->scalarNode('event_list')->defaultValue('Black\\Bundle\\EventBundle\\Form\\ChoiceList\\EventList')->end()
+                                ->scalarNode('visibility_list')->defaultValue('Black\\Bundle\\EventBundle\\Form\\ChoiceList\\VisibilityList')->end()
+                                ->scalarNode('status_list')->defaultValue('Black\\Bundle\\EventBundle\\Form\\ChoiceList\\StatusList')->end()
+                                ->scalarNode('handler')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Handler\\EventFormHandler')->end()
                             ->end()
                         ->end()
                     ->end()
@@ -102,9 +101,7 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('name')->defaultValue('black_event_sub_event')->end()
-                                ->scalarNode('type')->defaultValue(
-                                    'Black\\Bundle\\EventBundle\\Form\\Type\\SubEventType'
-                                )->end()
+                                ->scalarNode('type')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Type\\SubEventType')->end()
                             ->end()
                         ->end()
                     ->end()
@@ -123,12 +120,33 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('form')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('type')->defaultValue(
-                                    'Black\\Bundle\\EventBundle\\Form\\Type\\PostalAddressType'
-                                )->end()
-                                ->scalarNode('address_list')->defaultValue(
-                                    'Black\\Bundle\\CommonBundle\\Form\\ChoiceList\\AddressList'
-                                )->end()
+                                ->scalarNode('type')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Type\\PostalAddressType')->end()
+                                ->scalarNode('address_list')->defaultValue('Black\\Bundle\\CommonBundle\\Form\\ChoiceList\\AddressList')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addInvitationSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('invitation')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('form')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('name')->defaultValue('black_event_invitation')->end()
+                                ->scalarNode('type')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Type\\InvitationType')->end()
+                                ->scalarNode('expected_list')->defaultValue('Black\\Bundle\\EventBundle\\Form\\ChoiceList\\ExpectedList')->end()
+                                ->scalarNode('handler')->defaultValue('Black\\Bundle\\EventBundle\\Form\\Handler\\InvitationFormHandler')->end()
                             ->end()
                         ->end()
                     ->end()

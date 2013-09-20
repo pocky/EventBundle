@@ -15,7 +15,8 @@
     "require": {
         "php": ">=5.4.0",
         "black/person-bundle": "@dev",
-        "black/common-bundle": "@dev"
+        "black/common-bundle": "@dev",
+        "liuggio/excelbundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "Black\\Bundle\\EventBundle": "" }

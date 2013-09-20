@@ -26,16 +26,36 @@ event:
       subEvent:
         text: Sous-événement(s)
       superEvent:
-        text: Sous-événement de
+        text: Evénement parent
         empty: Choisir un événement
-      attendees:
-        text: Invités
-        
+      visibility:
+        text: Visibilité
+        empty: Visibilité de l'événement
+        choice:
+          public: Publique
+          private: Privé
+      status:
+        text: Statut
+        empty: Statut de l'événenement
+        choice:
+          open: Ouvert
+          close: Fermé
+
+    invitation:
+      expected:
+        text: Participerez-vous à cet événement ?
+        empty: Votre participation à l'événement
+        choice:
+          yes: Oui
+          no: Non
+          maybe: Peut-être
+
     tfoot:
       select:
         text: Exécuter une action
         option:
           choose: Choisir une action
+          export: Exporter
           delete: Supprimer
       submit:
         value: Envoyer

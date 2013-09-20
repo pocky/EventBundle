@@ -12,6 +12,7 @@
 namespace Black\Bundle\EventBundle\Document;
 
 use Black\Bundle\EventBundle\Model\Event as AbstractEvent;
+use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
 use Black\Bundle\CommonBundle\Traits\ThingDocumentTrait;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,6 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class Event
+ *
+ * @MappedSuperClass
  *
  * @package Black\Bundle\EventBundle\Document
  * @author  Alexandre Balmes <albalmes@gmail.com>
@@ -40,7 +43,7 @@ class Event extends AbstractEvent
     protected $endDate;
 
     /**
-     * @ODM\EmbedOne(targetDocument="PostalAddress")
+     * @ODM\EmbedOne(targetDocument="Black\Bundle\EventBundle\Document\PostalAddress")
      */
     protected $location;
 
@@ -62,6 +65,11 @@ class Event extends AbstractEvent
     protected $startDate;
 
     /**
+     * @ODM\String
+     */
+    protected $status;
+
+    /**
      * @ODM\ReferenceMany(targetDocument="Event", cascade={"all"})
      */
     protected $subEvents;
@@ -70,6 +78,11 @@ class Event extends AbstractEvent
      * @ODM\ReferenceOne(targetDocument="Event", cascade={"all"})
      */
     protected $superEvent;
+
+    /**
+     * @ODM\String
+     */
+    protected $visibility;
 
     /**
      * @ODM\PreRemove

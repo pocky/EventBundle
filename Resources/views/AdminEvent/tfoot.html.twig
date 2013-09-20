@@ -6,6 +6,7 @@
                 <label>{% trans from "form" %}event.admin.tfoot.select.text{% endtrans %}</label>
                 <select name="batchAction" style="opacity: 0;">
                     <option value="">{% trans from "form" %}event.admin.tfoot.select.option.choose{% endtrans %}</option>
+                    <option value="export">{% trans from "form" %}event.admin.tfoot.select.option.export{% endtrans %}</option>
                     <option value="delete">{% trans from "form" %}event.admin.tfoot.select.option.delete{% endtrans %}</option>
                 </select>
                 <input type="hidden" name="token" value="{{ csrf.generateCsrfToken('batch') }}" />

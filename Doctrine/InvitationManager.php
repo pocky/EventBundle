@@ -15,13 +15,13 @@ use Black\Bundle\EventBundle\Model\EventManagerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class EventManager
+ * Class InvitationManager
  *
  * @package Black\Bundle\EventBundle\Doctrine
  * @author  Alexandre Balmes <albalmes@gmail.com>
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
-class EventManager implements EventManagerInterface
+class InvitationManager implements EventManagerInterface
 {
     /**
      * @var ObjectManager
@@ -129,6 +129,27 @@ class EventManager implements EventManagerInterface
     }
 
     /**
+     * @param $event
+     * @param $person
+     *
+     * @return mixed
+     */
+    public function findEventForPerson($event, $person)
+    {
+        return $this->getRepository()->getEventForPerson($event, $person);
+    }
+
+    /**
+     * @param $event
+     *
+     * @return mixed
+     */
+    public function findInvitationsForEvent($event)
+    {
+        return $this->getRepository()->getInvitationsForEvent($event);
+    }
+
+    /**
      * Create a new model
      *
      * @return $config object
@@ -147,92 +168,5 @@ class EventManager implements EventManagerInterface
     protected function getClass()
     {
         return $this->class;
-    }
-
-    /**
-     * @return array
-     */
-    public function findEvents()
-    {
-        return $this->getRepository()->findAll();
-    }
-
-    /**
-     * @param array $criteria
-     *
-     * @return mixed
-     */
-    public function findEventBy($criterion = array())
-    {
-        return $this->getRepository()->getEventBy($criterion);
-    }
-
-    /**
-     * @param $slug
-     *
-     * @return mixed
-     */
-    public function findEventBySlug($slug)
-    {
-        return $this->getRepository()->getEventBy(array('slug' => $slug));
-    }
-
-    /**
-     * @param     $activity
-     * @param int $limit
-     *
-     * @return mixed
-     */
-    public function findEventsByStatus($activity, $limit = 3)
-    {
-        return $this->getRepository()->getEventsByStatus($activity, $limit);
-    }
-
-    /**
-     * @param int $limit
-     *
-     * @return mixed
-     */
-    public function findOpenEvents($limit = 3)
-    {
-        return $this->findEventsByStatus('open', $limit);
-    }
-
-    /**
-     * @param int $limit
-     *
-     * @return mixed
-     */
-    public function findCloseEvents($limit = 3)
-    {
-        return $this->findEventsByStatus('close', $limit);
-    }
-
-    /**
-     * @param integer $limit
-     * 
-     * @return array
-     */
-    public function getLastEvents($limit = 3)
-    {
-        return $this->getRepository()->getLastEvents($limit);
-    }
-
-    /**
-     * @param integer $id
-     * 
-     * @return array
-     */
-    public function findEventsForPerson($id)
-    {
-        return $this->getRepository()->getEventsForPerson($id);
-    }
-
-    /**
-     * @return integer
-     */
-    public function countAll()
-    {
-        return count($this->getRepository()->findAll());
     }
 }

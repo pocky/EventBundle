@@ -46,10 +46,40 @@ class EventRepository extends DocumentRepository
     public function getEventsForPerson($id)
     {
         $qb = $this->getQueryBuilder()
-                ->field('attendees.$id', new \MongoId($id))
+                ->field('attendees.$id')->equals(new \MongoId($id))
                 ->getQuery();
 
         return $qb->execute();
+    }
+
+    /**
+     * @param $status
+     * @param $limit
+     *
+     * @return array|bool|\Doctrine\MongoDB\ArrayIterator|\Doctrine\MongoDB\Cursor|\Doctrine\MongoDB\EagerCursor|mixed|null
+     */
+    public function getEventsByStatus($status, $limit)
+    {
+        $qb = $this->getQueryBuilder()
+            ->field('status')->equals($status)
+            ->sort('startDate', 'desc')
+            ->limit($limit)
+            ->getQuery();
+
+        return $qb->execute();
+    }
+
+    public function getEventBy($criterion)
+    {
+        $qb = $this->getQueryBuilder();
+
+        foreach ($criterion as $key => $value) {
+           $qb->field($key)->equals($value);
+        }
+
+        $qb = $qb->getQuery();
+
+        return $qb->getSingleResult();
     }
 
     /**

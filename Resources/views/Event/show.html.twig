@@ -1,0 +1,185 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+
+    {{ parent() }}
+
+    <div class="light patterned dashContent">
+
+        <div class="dashboard t10">
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <h1 class="span8">{{ document.name }}</h1>
+                    <p class="span4 align-right" style="line-height: 41px">
+                        <i class="icon icon-calendar"></i> {{ document.startDate|format_date }}
+                        <i class="icon icon-time"></i> {{ document.endDate|format_time }}
+                    </p>
+
+                    <p class="span4">
+                        <i class="icon icon-envelope-alt"></i> {{ document.status|trans({}, "view") }}
+                        <i class="icon icon-eye-open"></i> {{ document.visibility|trans({}, "view") }}
+
+                        {% if 'yes' == invitation.expected %}
+                        <i class="icon icon-check"></i> J'y participe
+                        {% elseif 'no' == invitation.expected %}
+                        <i class="icon icon-check-empty"></i> Je n'y participe pas
+                        {% elseif 'maybe' == invitation.expected %}
+                        <i class="icon icon-check-minus"></i> J'y participerais peut-être
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="span12">
+
+                </div>
+            </div>
+
+            <div class="row-fluid">
+
+                <div class="span12">
+
+                    <div class="widget span4">
+                        <header>
+                            <h2 class="floatLeft"><i class="icon icon-map-marker"></i> Addresse</h2></span>
+                        </header>
+                        <section>
+                            {% if document.location %}
+                                {% set location = document.location %}
+                                <address>
+                                    {% if location.name %}<p>{{ location.name }}</p>{% endif %}
+                                    {% if location.streetAddress %}<p>{{ location.streetAddress }}</p>{% endif %}
+                                    {% if location.complementaryStreetAddress %}<p>{{ location.complementaryStreetAddress }}</p>{% endif %}
+                                    {% if location.addressLocality %}<p>{{ location.postalCode ~ ' ' ~ location.addressLocality }}</p>{% endif %}
+                                </address>
+
+                            {% endif %}
+
+                        </section>
+                    </div>
+
+                    <div class="widget span8">
+                        <header>
+                            <h2 class="floatLeft"><i class="icon icon-align-justify"></i> A propos</h2></span>
+                        </header>
+                        <section>
+                            {{ document.description|raw }}
+
+                        </section>
+                        <footer>
+                            <p class="pull-right">
+                                {% if not registered %}
+                                <a class="btn btn-success"
+                                   data-toggle="modal"
+                                   data-remote="{{ url('invitation_subscribe', {event: document.slug }, true) }}"
+                                   title="Take this action">
+                                    S'inscrire
+                                </a>
+                                {% else %}
+
+                                    <a class="btn btn-success"
+                                       data-toggle="modal"
+                                       data-remote="{{ url('invitation_edit', {event: document.slug }, true) }}"
+                                       title="Take this action">
+                                        Modifier mon inscription
+                                    </a>
+                                {% endif %}
+                            </p>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="widget offset4 span8">
+                        <header>
+                            <h2 class="floatLeft"><i class="icon icon-user"></i> Participerons</h2>
+                        </header>
+                        <section>
+                            {% for invitation in document.invitations %}
+                                {% if 'yes' == invitation.expected %}
+                                    {% if invitation.person.path  %}
+                                        <img src="{{ asset('uploads/profile/' ~ user.person.path) }}" alt="" />
+                                    {% else %}
+                                        <img src="{{ asset('bundles/blackenginesocial/img/avatar-default.jpg') }}"  height="50px" width="50px" alt="avatar"/>
+                                    {% endif %}
+                                {% else %}
+                                    <p>Il n'y a pas encore de participants</p>
+                                {% endif %}
+                            {% else %}
+                                <p>Il n'y a pas encore de participants</p>
+                            {% endfor %}
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="widget offset4 span8">
+                        <header>
+                            <h2 class="floatLeft"><i class="icon icon-user"></i> Participerons peut-etre</h2>
+                        </header>
+                        <section>
+                            {% for invitation in document.invitations %}
+                                {% if 'maybe' == invitation.expected %}
+                                    {% if invitation.person.path  %}
+                                        <img src="{{ asset('uploads/profile/' ~ user.person.path) }}" alt="" />
+                                    {% else %}
+                                        <img src="{{ asset('bundles/blackenginesocial/img/avatar-default.jpg') }}"  height="50px" width="50px" alt="avatar"/>
+                                    {% endif %}
+                                {% else %}
+                                    <p>Il n'y a pas encore de participants</p>
+                                {% endif %}
+                            {% else %}
+                                <p>Il n'y a pas encore de participants</p>
+                            {% endfor %}
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+
+                    <div class="widget offset4 span8">
+                        <header>
+                            <h2 class="floatLeft"><i class="icon icon-user"></i> Ne participerons pas</h2>
+                        </header>
+                        <section>
+                            {% for invitation in document.invitations %}
+                                {% if 'no' == invitation.expected %}
+                                    {% if invitation.person.path  %}
+                                        <img src="{{ asset('uploads/profile/' ~ user.person.path) }}" alt="" />
+                                    {% else %}
+                                        <img src="{{ asset('bundles/blackenginesocial/img/avatar-default.jpg') }}"  height="50px" width="50px" alt="avatar"/>
+                                    {% endif %}
+                                {% else %}
+                                    <p>Il n'y a pas encore de participants</p>
+                                {% endif %}
+                            {% else %}
+                                <p>Il n'y a pas encore de participants</p>
+                            {% endfor %}
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('[data-toggle="modal"]').click(function(e) {
+                e.preventDefault();
+                var url = $(this).attr('data-remote');
+                $.get(url, function(data) {
+                    $(data).modal();
+                });
+            });
+        });
+    </script>
+
+{% endblock body %}

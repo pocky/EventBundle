@@ -1,0 +1,48 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div class="light patterned dashContent" >
+
+        <div class="dashboard t10">
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <h1>Evenements en cours</h1>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+
+                <div class="span12">
+
+                    {% for document in documents %}
+                        <div class="widget span4">
+                            <header>
+                                <h2 class="floatLeft">{{ document.name }}</h2>
+                                <span class="label label-info floatRight">{{ document.status|trans({}, "view") }}</span>
+                            </header>
+                            <section>
+                                {{ document.description|raw }}
+                            </section>
+                            <footer>
+                                <p class="pull-right">
+                                    <a class="btn btn-info"
+                                       href="{{ path('event_show', {slug: document.slug}, true ) }}"
+                                       title="Voir l'événement">
+                                        Participer
+                                    </a>
+                                </p>
+                            </footer>
+                        </div>
+                    {% else %}
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock body %}

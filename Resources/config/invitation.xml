@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="black_event.invitation.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form" scope="request">
+            <argument>%black_event.invitation.form.name%</argument>
+            <argument type="service" id="black_event.invitation.form.type" />
+            <argument>null</argument>
+        </service>
+
+        <service id="black_event.invitation.form.type" class="%black_event.invitation.form.type%" scope="request">
+            <argument>%black_event.model.invitation.class%</argument>
+            <tag name="form.type" alias="black_event_event" />
+        </service>
+
+        <service id="black_event.invitation.form.handler" class="%black_event.invitation.form.handler%" scope="request" public="true">
+            <argument type="service" id="black_event.invitation.form" />
+            <argument type="service" id="request" />
+            <argument type="service" id="session" />
+        </service>
+
+        <service id="black_event.invitation.form.expected_list" class="%black_event.invitation.form.expected_list%" public="false" />
+
+        <service id="black_event.invitation.form.expected_type" class="Black\Bundle\CommonBundle\Form\Type\CustomChoiceListType" public="true">
+            <argument type="service" id="black_event.invitation.form.expected_list" />
+            <argument>black_event_choice_list_expected</argument>
+            <tag name="form.type" alias="black_event_choice_list_expected" />
+        </service>
+
+    </services>
+</container>

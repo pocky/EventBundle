@@ -11,9 +11,9 @@
 
 namespace Black\Bundle\EventBundle\Model;
 
-use Doctrine\ODM\MongoDB\Mapping\Annotations\MappedSuperclass;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use Black\Bundle\PersonBundle\Model\PersonInterface;
+use Black\Bundle\EventBundle\Model\InvitationInterface;
 
 /**
  * Class Event
@@ -22,7 +22,6 @@ use Black\Bundle\PersonBundle\Model\PersonInterface;
  * @author  Alexandre Balmes <albalmes@gmail.com>
  * @license http://opensource.org/licenses/mit-license.php MIT
  *
- * @MappedSuperClass
  */
 abstract class Event implements EventInterface
 {
@@ -34,7 +33,7 @@ abstract class Event implements EventInterface
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
-    protected $attendees;
+    protected $invitations;
 
     /**
      * @var
@@ -67,6 +66,12 @@ abstract class Event implements EventInterface
     protected $startDate;
 
     /**
+     * @var
+     * @Assert\Choice(callback="getStatusChoices")
+     */
+    protected $status;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      */
     protected $subEvents;
@@ -77,11 +82,18 @@ abstract class Event implements EventInterface
     protected $superEvent;
 
     /**
+     * @var
+     * @Assert\Choice(callback="getVisibilityChoices")
+     */
+    protected $visibility;
+
+
+    /**
      *
      */
     public function __construct()
     {
-        $this->attendees    = new ArrayCollection();
+        $this->invitations  = new ArrayCollection();
         $this->subEvents    = new ArrayCollection();
     }
 
@@ -102,19 +114,19 @@ abstract class Event implements EventInterface
     }
 
     /**
-     * @param $attendees
+     * @param $invitations
      */
-    public function setAttendees($attendees)
+    public function setInvitations($invitations)
     {
-        $this->attendees = $attendees;
+        $this->invitations = $invitations;
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getAttendees()
+    public function getInvitations()
     {
-        return $this->attendees;
+        return $this->invitations;
     }
 
     /**
@@ -293,29 +305,114 @@ abstract class Event implements EventInterface
     }
 
     /**
-     * @param PersonInterface $attendee
+     * @param PersonInterface $invitation
      */
-    public function addAttendee(PersonInterface $attendee)
+    public function addInvitation(InvitationInterface $invitation)
     {
-        $this->getAttendees()->add($attendee);
+        $this->getInvitations()->add($invitation);
     }
 
     /**
-     * @param PersonInterface $attendee
+     * @param PersonInterface $invitation
      */
-    public function removeAttendee(PersonInterface $attendee)
+    public function removeInvitation(InvitationInterface $invitation)
     {
-        $this->getAttendees()->removeElement($attendee);
+        $this->getInvitations()->removeElement($invitation);
     }
 
     /**
      *
      */
-    public function cleanAttendees()
+    public function cleanInvitations()
     {
-        foreach ($this->getAttendees() as $attendee) {
-            $this->removeAttendee($attendee);
+        foreach ($this->getInvitations() as $invitation) {
+            $this->removeInvitation($invitation);
+
         }
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatusChoices()
+    {
+        return array('open', 'close');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getVisibilityChoices()
+    {
+        return array('public', 'private');
+    }
+
+    /**
+     * @param string $enabled
+     *
+     * @return $this
+     */
+    public function setVisibility($visibility)
+    {
+        $this->visibility = $visibility;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublic()
+    {
+        if ('public' === $this->getVisbility()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate()
+    {
+        if ('private' === $this->getVisbility()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
     }
 
     /**
@@ -328,6 +425,6 @@ abstract class Event implements EventInterface
             $this->setSuperEvent(null);
         }
         
-        $this->cleanAttendees();
+        $this->cleanInvitations();
     }
 }

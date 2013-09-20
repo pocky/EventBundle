@@ -1,6 +1,6 @@
 event:
   admin:
-      
+
     breadLine:
       event:
         breadcrumb:
@@ -11,7 +11,7 @@ event:
           text: Créer un événement
       shortcut:
         text: Raccourci
-        
+
     contentTop:
       new:
         text: Créer un événement
@@ -21,23 +21,23 @@ event:
         text: Evénements
       show:
         text: Voir l'événement
-          
+
     edit:
       event:
         text: Modifier un événement
-    
+
     index:
       event:
         text: Evénements
-    
+
     js:
       remove:
         text: Enlever
-    
+
     new:
       event:
         text: Nouvel événement
-        
+
     mainNav:
       event:
         a:
@@ -49,14 +49,14 @@ event:
     row:
       show:
         title: Voir
-        
+
     sidebar:
       event:
         text: Evénements
         a:
           text: Liste des événements
           title: Liste des événements
-        
+
     show:
       attendees:
         text: Liste des invités
@@ -66,6 +66,10 @@ event:
         a:
           text: Editer
           title: Editer
+      export:
+        a:
+            text: Exporter les invités
+            title: Exporter au format excel
       event:
         text: Evénements
         empty: Il n'a pas encore participé à un événement
@@ -75,7 +79,7 @@ event:
         text: Description
         empty:
           text: Il n'y a pas de description pour cet événement
-    
+
     table:
       record:
         empty:

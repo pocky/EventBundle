@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="black_event.manager.event">%black_event.event.manager%</parameter>
+        <parameter key="black_event.manager.invitation">%black_event.invitation.manager%</parameter>
     </parameters>
 
     <services>
@@ -14,6 +15,11 @@
         <service id="black_event.manager.event" class="%black_event.manager.event%">
             <argument type="service" id="black_event.document.manager" />
             <argument>%black_event.model.event.class%</argument>
+        </service>
+
+        <service id="black_event.manager.invitation" class="%black_event.manager.invitation%">
+            <argument type="service" id="black_event.document.manager" />
+            <argument>%black_event.model.invitation.class%</argument>
         </service>
 
     </services>

@@ -11,6 +11,7 @@
 
 namespace Black\Bundle\EventBundle\Controller;
 
+use Black\Bundle\EventBundle\Model\InvitationInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception;
@@ -106,27 +107,32 @@ class AdminEventController extends Controller
         $document   = $repository->findOneById($id);
 
         if (!$document) {
-            throw $this->createNotFoundException('Unable to find Person document.');
+            throw $this->createNotFoundException('Unable to find document.');
         }
 
         $csrf   = $this->container->get('form.csrf_provider');
 
         $attendees = array();
 
-        foreach ($document->getAttendees() as $attendee) {
-            if ($attendee->getAddress()->first() != null) {
-                $country = $attendee->getAddress()->first()->getAddressCountryLocale($this->getRequest()->getLocale());
-            } else {
-                $country = false;
-            }
+        if ($document->getInvitations()) {
+            foreach ($document->getInvitations() as $invitation) {
 
-            $attendees[] = array(
-                'id'                                                => $attendee->getId(),
-                'person.admin.person.name.given.text'               => $attendee->getGivenName(),
-                'person.admin.person.name.family.text'              => $attendee->getFamilyName(),
-                'person.admin.person.email.text'                    => $attendee->getEmail(),
-                'person.admin.postalAddress.address.country.text'   => $country
-            );
+                $attendee = $invitation->getPerson();
+                if ($attendee->getAddress()->first() != null) {
+                    $country = $attendee->getAddress()->first()->getAddressCountryLocale($this->getRequest()->getLocale());
+                } else {
+                    $country = false;
+                }
+
+                $attendees[] = array(
+                    'id'                                                => $attendee->getId(),
+                    'expected'                                          => $invitation->getExpected(),
+                    'person.admin.person.name.given.text'               => $attendee->getGivenName(),
+                    'person.admin.person.name.family.text'              => $attendee->getFamilyName(),
+                    'person.admin.person.email.text'                    => $attendee->getEmail(),
+                    'person.admin.postalAddress.address.country.text'   => $country
+                );
+            }
         }
 
         return array(
@@ -150,6 +156,7 @@ class AdminEventController extends Controller
     {
         $documentManager    = $this->getManager();
         $document           = $documentManager->createInstance();
+        $document->setStartDate(new \DateTime('now'));
 
         $formHandler    = $this->get('black_event.event.form.handler');
         $process        = $formHandler->process($document);
@@ -258,11 +265,70 @@ class AdminEventController extends Controller
     }
 
     /**
-     * Delete an Attendee from document
-     * 
-     * @param PersonInterface $person
-     * @param EventInterface  $event
-     * @param null            $token
+     * Export Excel event.
+     *
+     * @param array|integer $id
+     *
+     * @Method({"GET"})
+     * @Route("/{id}/export/excel.xlsx", name="admin_event_attendee_export_excel")
+     * @Secure(roles="ROLE_USER")
+     * @return Response
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If document doesn't exists
+     */
+    public function excelAction($id)
+    {
+        $documentManager    = $this->getManager();
+        $configManager      = $this->getConfigManager();
+        $repository         = $documentManager->getRepository();
+
+        $document   = $repository->findOneById($id);
+
+        if (!$document) {
+            throw $this->createNotFoundException('Unable to find any document.');
+        }
+
+        $excelService = $this->get('xls.service_xls5');
+
+        $date = new \DateTime('now');
+
+        $general = $configManager->findPropertyByName('General');
+
+        $excelService->excelObj->getProperties()->setCreator($general->getValue()['site_name'])
+            ->setLastModifiedBy("Activ'Company")
+            ->setTitle(sprintf('Export for %s at %s', $document->getName(), $date->format('c')));
+
+        $row = 1;
+
+        foreach ($document->getInvitations() as $invitation) {
+
+            $person = $invitation->getPerson();
+
+            $excelService->excelObj->setActiveSheetIndex(0)
+                ->setCellValue('A' . $row, $person->getName())
+                ->setCellValue('B' . $row, $person->getEmail())
+                ->setCellValue('C' . $row, $invitation->getExpected());
+            ;
+
+            $row++;
+        }
+
+        $excelService->excelObj->getActiveSheet()->setTitle('Registered');
+        $excelService->excelObj->setActiveSheetIndex(0);
+
+        $response = $excelService->getResponse();
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getName() . '".xls"');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+
+        return $response;
+    }
+
+    /**
+     * @param InvitationInterface   $invitation
+     * @param EventInterface        $event
+     * @param null                  $token
      *
      * @Method({"GET"})
      * @Route("/{event}/delete/attendee/{person}", name="admin_event_attendee_delete")
@@ -271,7 +337,7 @@ class AdminEventController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException If document doesn't exists
      */
-    public function deleteAttendeeAction(PersonInterface $person, EventInterface $event, $token = null)
+    public function deleteAttendeeAction(InvitationInterface $invitation, EventInterface $event, $token = null)
     {
         $request    = $this->getRequest();
 
@@ -284,7 +350,7 @@ class AdminEventController extends Controller
 
         if (true === $token) {
             $dm = $this->getManager();
-            $event->removeAttendee($person);
+            $event->removeInvitation($invitation);
             $dm->flush();
 
             $this->get('session')->getFlashBag()->add('success', 'success.event.admin.attendee.delete');
@@ -363,6 +429,14 @@ class AdminEventController extends Controller
     protected function getManager()
     {
         return $this->get('black_event.manager.event');
+    }
+
+    /**
+     * @return object
+     */
+    protected function getConfigManager()
+    {
+        return $this->get('black_config.manager.config');
     }
 
     /**

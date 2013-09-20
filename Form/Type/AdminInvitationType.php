@@ -11,30 +11,47 @@
 
 namespace Black\Bundle\EventBundle\Form\Type;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Class SubEventType
+ * Class AdminInvitationType
  *
  * @package Black\Bundle\EventBundle\Form\Type
  * @author  Alexandre Balmes <albalmes@gmail.com>
  * @license http://opensource.org/licenses/mit-license.php MIT
  */
-class SubEventType extends EventType
+class AdminInvitationType extends AbstractType
 {
+
     /**
-     * @param \Symfony\Component\Form\FormBuilderInterface  $builder
-     * @param array                                         $options
+     * @var string
+     */
+    protected $class;
+
+    /**
+     * @param $class
+     */
+    public function __construct($class)
+    {
+        $this->class = $class;
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
+     * @param array                                        $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-
         $builder
-            ->remove('subEvents')
-            ->remove('superEvent')
-            ->remove('attendees');
+            ->add('attendees', 'black_person_double_box_person', array(
+                    'label'         => 'event.admin.event.attendees.text',
+                    'multiple'      => true,
+                    'by_reference'  => false,
+                    'required'      => false
+                )
+            );
     }
 
     /**
@@ -45,7 +62,7 @@ class SubEventType extends EventType
         $resolver->setDefaults(
             array(
                 'data_class'            => $this->class,
-                'intention'             => 'subEvent_form',
+                'intention'             => 'invitation_form',
                 'translation_domain'    => 'form'
             )
         );
@@ -56,6 +73,6 @@ class SubEventType extends EventType
      */
     public function getName()
     {
-        return 'black_event_sub_event';
+        return 'black_event_invitation';
     }
 }

@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Black\Bundle\EventBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -56,7 +55,9 @@ class BlackEventExtension extends Extension
                     'event_class'           => 'black_event.model.event.class',
                     'subevent_class'        => 'black_event.model.subevent.class',
                     'postaladdress_class'   => 'black_event.postaladdress.model.class',
-                    'event_manager'         => 'black_event.event.manager'
+                    'invitation_class'      => 'black_event.model.invitation.class',
+                    'event_manager'         => 'black_event.event.manager',
+                    'invitation_manager'    => 'black_event.invitation.manager'
                 )
             )
         );
@@ -71,6 +72,10 @@ class BlackEventExtension extends Extension
 
         if (!empty($config['postaladdress'])) {
             $this->loadPostalAddress($config['postaladdress'], $container, $loader);
+        }
+
+        if (!empty($config['invitation'])) {
+            $this->loadInvitation($config['invitation'], $container, $loader);
         }
     }
 
@@ -119,6 +124,24 @@ class BlackEventExtension extends Extension
             $container,
             array(
                 'form' => 'black_event.postaladdress.form.%s',
+            )
+        );
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     * @param XmlFileLoader    $loader
+     */
+    private function loadInvitation(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
+        $loader->load('invitation.xml');
+
+        $this->remapParametersNamespaces(
+            $config,
+            $container,
+            array(
+                'form' => 'black_event.invitation.form.%s',
             )
         );
     }
